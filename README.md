@@ -1,4 +1,4 @@
-# Undertale on fc nes 
+# Undertale on fc/nes 
 I have a idea!  
 Undertale is a pixel game  
 FC/NES is a 8 bit games console  
