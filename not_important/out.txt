@@ -1,0 +1,63 @@
+ca65 V2.19 - Git 216bb22
+Main file   : PRG_ROM.asm
+Current file: PRG_ROM.asm
+
+000000r 1               
+000000r 1               PPU_CTRL = $2000
+000000r 1               PPU_MASK = $2001
+000000r 1               PPU_STATUS = $2002
+000000r 1               
+000000r 1               PPU_ADDR = $2006
+000000r 1               PPU_DATA = $2007
+000000r 1               
+000000r 1               OAM_ADDR = $2003
+000000r 1               OAM_DATA = $2004
+000000r 1               OAM_DMA = $4014
+000000r 1               
+000000r 1               
+000000r 1               .segment "HEADER"
+000000r 1  4E 45 53 1A      .byte "NES",$1A ;文件头 NES<EOF>
+000004r 1  02               .byte $02   ;2个16kb的代码 $开始表示16进制数字 默认看做地址
+000005r 1  01               .byte $01   ;1个8kb的chr
+000006r 1               ; Code
+000006r 1               .segment "CODE"
+000000r 1               RESET:
+000000r 1  78               SEI
+000001r 1  D8               CLD
+000002r 1               
+000002r 1               VBLANKWAIT1:
+000002r 1  AD 02 20         LDA PPU_STATUS
+000005r 1  10 FB            BPL VBLANKWAIT1
+000007r 1               
+000007r 1               VBLANKWAIT2:
+000007r 1  AD 02 20         LDA PPU_STATUS
+00000Ar 1  10 FB            BPL VBLANKWAIT2
+00000Cr 1               
+00000Cr 1               LOAD_PAL:
+00000Cr 1  AD 02 20         LDA PPU_STATUS
+00000Fr 1  A9 3F            LDA #$3F
+000011r 1  8D 06 20         STA PPU_ADDR
+000014r 1  A9 00            LDA #$00
+000016r 1  8D 06 20         STA PPU_ADDR
+000019r 1  A2 00            LDX #$00
+00001Br 1  BD rr rr     :   LDA PALDATA,X
+00001Er 1  8D 07 20         STA PPU_DATA
+000021r 1  E8               INX
+000022r 1  E0 20            CPX #$20
+000024r 1  D0 F5            BNE :-
+000026r 1               
+000026r 1               PALDATA:
+000026r 1  0F 06 27 2C      .incbin "FriskPalette.dat"
+00002Ar 1               
+00002Ar 1               LOOP:
+00002Ar 1  4C rr rr         JMP LOOP
+00002Dr 1               
+00002Dr 1               .segment "VECTORS"
+000000r 1  00 00 rr rr      .word 0,RESET,0   ;3个中断地址 NMI,RESET,IQR
+000004r 1  00 00        
+000006r 1               ; Chr
+000006r 1               .segment "CHARS"
+000000r 1  00 0F 1F 3F      .incbin "CHR_ROM.chr"
+000004r 1  7F 7F 77 E3  
+000008r 1  00 00 00 00  
+000000r 1               
