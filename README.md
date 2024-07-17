@@ -4,8 +4,8 @@ Undertale is a pixel game
 FC/NES is a 8 bit games console  
 In theory, it can only display pixel patterns  
 so why can't we play Undertale on FC/NES  
-*in others md file i will just call it console*
+*in others md file i will just call FC/NES console*
 
 thanks to spriters-resource.com!
-it help me a lot!
-*can anyone offer me the music core of Undertale*
+it help me a lot!  
+*can anyone offer me the music score of Undertale*
