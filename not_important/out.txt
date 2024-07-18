@@ -16,48 +16,186 @@ Current file: PRG_ROM.asm
 000000r 1               
 000000r 1               
 000000r 1               .segment "HEADER"
-000000r 1  4E 45 53 1A      .byte "NES",$1A ;文件头 NES<EOF>
-000004r 1  02               .byte $02   ;2个16kb的代码 $开始表示16进制数字 默认看做地址
-000005r 1  01               .byte $01   ;1个8kb的chr
+000000r 1  4E 45 53 1A      .BYTE "NES",$1A ;文件头 NES<EOF>
+000004r 1  02               .BYTE $02   ;2个16kb的代码 $开始表示16进制数字 默认看做地址
+000005r 1  01               .BYTE $01   ;1个8kb的chr
 000006r 1               ; Code
 000006r 1               .segment "CODE"
 000000r 1               RESET:
-000000r 1  78               SEI
-000001r 1  D8               CLD
-000002r 1               
-000002r 1               VBLANKWAIT1:
-000002r 1  AD 02 20         LDA PPU_STATUS
-000005r 1  10 FB            BPL VBLANKWAIT1
-000007r 1               
-000007r 1               VBLANKWAIT2:
-000007r 1  AD 02 20         LDA PPU_STATUS
-00000Ar 1  10 FB            BPL VBLANKWAIT2
-00000Cr 1               
-00000Cr 1               LOAD_PAL:
-00000Cr 1  AD 02 20         LDA PPU_STATUS
-00000Fr 1  A9 3F            LDA #$3F
-000011r 1  8D 06 20         STA PPU_ADDR
-000014r 1  A9 00            LDA #$00
-000016r 1  8D 06 20         STA PPU_ADDR
-000019r 1  A2 00            LDX #$00
-00001Br 1  BD rr rr     :   LDA PALDATA,X
-00001Er 1  8D 07 20         STA PPU_DATA
-000021r 1  E8               INX
-000022r 1  E0 20            CPX #$20
-000024r 1  D0 F5            BNE :-
-000026r 1               
-000026r 1               PALDATA:
-000026r 1  0F 06 27 2C      .incbin "FriskPalette.dat"
-00002Ar 1               
-00002Ar 1               LOOP:
-00002Ar 1  4C rr rr         JMP LOOP
-00002Dr 1               
-00002Dr 1               .segment "VECTORS"
-000000r 1  00 00 rr rr      .word 0,RESET,0   ;3个中断地址 NMI,RESET,IQR
+000000r 1  A9 0F            LDA #$0F
+000002r 1  8D rr rr         STA PLAYER_X
+000005r 1  8D rr rr         STA PLAYER_Y
+000008r 1  78               SEI
+000009r 1  D8               CLD
+00000Ar 1               
+00000Ar 1               VBLANKWAIT1:
+00000Ar 1  AD 02 20         LDA PPU_STATUS
+00000Dr 1  10 FB            BPL VBLANKWAIT1
+00000Fr 1               
+00000Fr 1               VBLANKWAIT2:
+00000Fr 1  AD 02 20         LDA PPU_STATUS
+000012r 1  10 FB            BPL VBLANKWAIT2
+000014r 1               
+000014r 1               LOAD_PAL:
+000014r 1  AD 02 20         LDA PPU_STATUS
+000017r 1  A9 3F            LDA #$3F
+000019r 1  8D 06 20         STA PPU_ADDR
+00001Cr 1  A9 00            LDA #$00
+00001Er 1  8D 06 20         STA PPU_ADDR
+000021r 1  A2 00            LDX #$00
+000023r 1  BD rr rr     :   LDA PALDATA,X
+000026r 1  8D 07 20         STA PPU_DATA
+000029r 1  E8               INX
+00002Ar 1  E0 20            CPX #$20
+00002Cr 1  D0 F5            BNE :-
+00002Er 1               
+00002Er 1               READ_PAD:
+00002Er 1  A9 01            lda #$01    ;0000 00001
+000030r 1  8D 16 40         sta $4016
+000033r 1  8D rr rr         sta buttons ;buttons = 0000 0001
+000036r 1               
+000036r 1  4A               lsr A       ;0000 0000 > C = 1;A = 0
+000037r 1  8D 16 40         sta $4016 ;
+00003Ar 1               
+00003Ar 1  AD 16 40     :   lda $4016 ;A = 0000 000 Button_A
+00003Dr 1  4A               lsr A       ; C = Button_A;A=0000 0000
+00003Er 1  2E rr rr         rol buttons ; buttons = 0000 001 buttons[0] = C
+000041r 1                               ; C = 0 -->[A B SEL STATR UP DOWN LEFT RIGHT] ; C = 1
+000041r 1  90 F7            bcc :-    ;
+000043r 1               
+000043r 1               LOAD_SPRITE:
+000043r 1  AD rr rr         lda FRISK_DOWN
+000046r 1  8D rr rr         sta ANI_ADDR
+000049r 1  AD rr rr         lda FRISK_DOWN + 1
+00004Cr 1  8D rr rr         sta ANI_ADDR + 1
+00004Fr 1  A9 00            lda #$00
+000051r 1  8D rr rr         sta SPR_ADDR
+000054r 1  A9 02            lda #$02
+000056r 1  8D rr rr         sta SPR_ADDR+1
+000059r 1  A9 00            lda #$00
+00005Br 1  8D rr rr         sta OAM_USED
+00005Er 1               
+00005Er 1  A0 00        :   ldy #$00
+000060r 1  B1 rr            lda (ANI_ADDR),y
+000062r 1  6D rr rr         adc PLAYER_X
+000065r 1  A0 03            ldy #$03
+000067r 1  91 rr            sta (SPR_ADDR),y
+000069r 1               
+000069r 1  A0 01            ldy #$01
+00006Br 1  B1 rr            lda (ANI_ADDR),y
+00006Dr 1  6D rr rr         adc PLAYER_Y
+000070r 1  A0 00            ldy #$00
+000072r 1  91 rr            sta (SPR_ADDR),y
+000074r 1               
+000074r 1  A0 02            ldy #$02
+000076r 1  B1 rr            lda (ANI_ADDR),y
+000078r 1  A0 01            ldy #$01
+00007Ar 1  91 rr            sta (SPR_ADDR),y
+00007Cr 1  A0 03            ldy #$03
+00007Er 1  B1 rr            lda (ANI_ADDR),y
+000080r 1  A0 02            ldy #$02
+000082r 1  91 rr            sta (SPR_ADDR),y
+000084r 1  AD rr rr         lda ANI_ADDR
+000087r 1  18               clc
+000088r 1  69 04            adc #$04
+00008Ar 1  8D rr rr         sta ANI_ADDR
+00008Dr 1               
+00008Dr 1  AD rr rr         lda ANI_ADDR + 1
+000090r 1  69 00            adc #$00
+000092r 1  8D rr rr         sta ANI_ADDR + 1
+000095r 1               
+000095r 1  AD rr rr         lda SPR_ADDR
+000098r 1  18               clc
+000099r 1  69 04            adc #$04
+00009Br 1  8D rr rr         sta SPR_ADDR
+00009Er 1               
+00009Er 1  EE rr rr         inc OAM_USED
+0000A1r 1  AD rr rr         lda OAM_USED
+0000A4r 1  C9 08            cmp #$08
+0000A6r 1  D0 B6            bne :-
+0000A8r 1               
+0000A8r 1               
+0000A8r 1               ENABLE_PPU:
+0000A8r 1  A9 80            LDA #%10000000
+0000AAr 1  8D 00 20         STA PPU_CTRL
+0000ADr 1  A9 10            LDA #%00010000
+0000AFr 1  8D 01 20         STA PPU_MASK
+0000B2r 1               
+0000B2r 1               LOOP:
+0000B2r 1  4C rr rr         JMP LOOP
+0000B5r 1               
+0000B5r 1               NMI:
+0000B5r 1  A9 00            LDA #$00
+0000B7r 1  8D 03 20         STA OAM_ADDR
+0000BAr 1  A9 02            LDA #$02
+0000BCr 1  8D 14 40         STA OAM_DMA
+0000BFr 1  40               RTI
+0000C0r 1               
+0000C0r 1               PALDATA:
+0000C0r 1  14 0F 0F 0F      .INCBIN"Palette.dat"
+0000C4r 1  14 0F 0F 0F  
+0000C8r 1  14 0F 0F 0F  
+0001C0r 1               
+0001C0r 1               FRISK_DOWN_0:
+0001C0r 1  00 00 00 00  	.byte   0,  0,$00,0
+0001C4r 1  08 00 01 00  	.byte   8,  0,$01,0
+0001C8r 1  00 08 02 00  	.byte   0,  8,$02,0
+0001CCr 1  08 08 03 00  	.byte   8,  8,$03,0
+0001D0r 1  00 10 04 00  	.byte   0, 16,$04,0
+0001D4r 1  08 10 05 00  	.byte   8, 16,$05,0
+0001D8r 1  00 17 06 00  	.byte   0, 23,$06,0
+0001DCr 1  08 17 07 00  	.byte   8, 23,$07,0
+0001E0r 1               
+0001E0r 1               FRISK_DOWN_1:
+0001E0r 1  00 00 00 00  	.byte   0,  0,$00,0
+0001E4r 1  08 00 01 00  	.byte   8,  0,$01,0
+0001E8r 1  00 08 02 00  	.byte   0,  8,$02,0
+0001ECr 1  08 08 03 00  	.byte   8,  8,$03,0
+0001F0r 1  00 10 08 00  	.byte   0, 16,$08,0
+0001F4r 1  08 10 05 00  	.byte   8, 16,$05,0
+0001F8r 1  00 17 09 00  	.byte   0, 23,$09,0
+0001FCr 1  08 17 0A 00  	.byte   8, 23,$0a,0
+000200r 1               
+000200r 1               FRISK_DOWN_2:
+000200r 1  00 00 00 00  	.byte   0,  0,$00,0
+000204r 1  08 00 01 00  	.byte   8,  0,$01,0
+000208r 1  00 08 02 00  	.byte   0,  8,$02,0
+00020Cr 1  08 08 03 00  	.byte   8,  8,$03,0
+000210r 1  00 10 04 00  	.byte   0, 16,$04,0
+000214r 1  08 10 05 00  	.byte   8, 16,$05,0
+000218r 1  00 17 06 00  	.byte   0, 23,$06,0
+00021Cr 1  08 17 07 00  	.byte   8, 23,$07,0
+000220r 1               
+000220r 1               FRISK_DOWN_3:
+000220r 1  00 00 00 00  	.byte   0,  0,$00,0
+000224r 1  08 00 01 00  	.byte   8,  0,$01,0
+000228r 1  00 08 02 00  	.byte   0,  8,$02,0
+00022Cr 1  08 08 03 00  	.byte   8,  8,$03,0
+000230r 1  00 10 04 00  	.byte   0, 16,$04,0
+000234r 1  08 10 0B 00  	.byte   8, 16,$0b,0
+000238r 1  00 17 0C 00  	.byte   0, 23,$0c,0
+00023Cr 1  08 17 0D 00  	.byte   8, 23,$0d,0
+000240r 1               
+000240r 1               FRISK_DOWN:
+000240r 1  rr rr        	.word FRISK_DOWN_0
+000242r 1  rr rr        	.word FRISK_DOWN_1
+000244r 1  rr rr        	.word FRISK_DOWN_2
+000246r 1  rr rr        	.word FRISK_DOWN_3
+000248r 1               
+000248r 1               .segment "ZEROPAGE"
+000000r 1  xx               PLAYER_X: .res 1
+000001r 1  xx               PLAYER_Y: .res 1
+000002r 1  xx xx            ANI_ADDR: .res 2
+000004r 1  xx xx            SPR_ADDR: .res 2
+000006r 1  xx               OAM_USED: .res 1
+000007r 1  xx               buttons: .res 1
+000008r 1               
+000008r 1               .segment "VECTORS"
+000000r 1  rr rr rr rr      .WORD NMI,RESET,0   ;3个中断地址 NMI,RESET,IQR
 000004r 1  00 00        
 000006r 1               ; Chr
 000006r 1               .segment "CHARS"
-000000r 1  00 0F 1F 3F      .incbin "CHR_ROM.chr"
+000000r 1  00 0F 1F 3F      .INCBIN "CHR_ROM.chr"
 000004r 1  7F 7F 77 E3  
 000008r 1  00 00 00 00  
 000000r 1               
