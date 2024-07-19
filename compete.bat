@@ -1,9 +1,18 @@
 
-ca65 PRG_ROM.asm -l not_important/out.txt -o not_important/UNDERTALE.o
-@REM 链接器 .o -> .nes
-@REM ld65 --target nes demo.o -o ch4.nes 使用cc65自带的
-ld65 --config not_important/nes.cfg not_important/UNDERTALE.o -o export/UNDERTALE.nes
 
-cd export
-UNDERTALE.nes
+cc65 -t nes CODE.c -o elsefiles/NOT_IMPORTANT/PRG_ROM.s --add-source 
+
+@REM 编译 .s -> .o
+ca65 lib\crt0.s
+ca65 elsefiles/NOT_IMPORTANT/PRG_ROM.s -l elsefiles/NOT_IMPORTANT/OUT.txt -o elsefiles/NOT_IMPORTANT/UNDERTALE.o
+
+@REM 链接器 .o -> .nes 使用内置的nes.cfg
+ld65 -C elsefiles/NOT_IMPORTANT/nes.cfg lib\crt0.o elsefiles/NOT_IMPORTANT/UNDERTALE.o nes.lib -o UNDERTALE.nes
+
+@REM del ch3.o
+
+@REM 运行
+CD EXPORT
+UNDERTALE.NES
+
 pause
