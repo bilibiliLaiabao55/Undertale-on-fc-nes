@@ -17,19 +17,37 @@
 	.import		_ppu_on_all
 	.import		_oam_clear
 	.import		_oam_meta_spr
+	.import		_music_play
 	.import		_pad_poll
+	.export		_frisk_down_0_data
+	.export		_frisk_down_1_data
+	.export		_frisk_down_2_data
+	.export		_frisk_left_0_data
+	.export		_frisk_left_1_data
+	.export		_frisk_right_0_data
+	.export		_frisk_right_1_data
+	.export		_frisk_up_0_data
+	.export		_frisk_up_1_data
+	.export		_frisk_up_2_data
+	.export		_frisk
 	.export		_player_x
 	.export		_player_y
 	.export		_pad1
 	.export		_frisk_frame
 	.export		_frisk_frame_wait
 	.export		_frisk_face
+	.export		_state
+	.export		_map_frisk_collison
+	.export		_tempL
+	.export		_tempR
+	.export		_tempT
+	.export		_tempD
+	.export		_frisk_map_box
+	.export		_LEFT_COLLISON
+	.export		_RIGHT_COLLISON
+	.export		_UP_COLLISON
+	.export		_DOWN_COLLISON
 	.export		_palette
-	.export		_frisk_down_0_data
-	.export		_frisk_down_1_data
-	.export		_frisk_down_2_data
-	.export		_frisk_down_3_data
-	.export		_frisk_down
 	.export		_frisk_frame_change
 	.export		_main
 
@@ -45,42 +63,13 @@ _frisk_frame_wait:
 	.byte	$00
 _frisk_face:
 	.byte	$00
+_state:
+	.byte	$01
+_map_frisk_collison:
+	.byte	$00
 
 .segment	"RODATA"
 
-_palette:
-	.byte	$14
-	.byte	$30
-	.byte	$24
-	.byte	$19
-	.byte	$14
-	.byte	$1C
-	.byte	$15
-	.byte	$2A
-	.byte	$14
-	.byte	$06
-	.byte	$27
-	.byte	$2C
-	.byte	$14
-	.byte	$06
-	.byte	$27
-	.byte	$2C
-	.byte	$14
-	.byte	$06
-	.byte	$27
-	.byte	$2C
-	.byte	$14
-	.byte	$06
-	.byte	$27
-	.byte	$2C
-	.byte	$14
-	.byte	$06
-	.byte	$27
-	.byte	$2C
-	.byte	$14
-	.byte	$06
-	.byte	$27
-	.byte	$2C
 _frisk_down_0_data:
 	.byte	$00
 	.byte	$00
@@ -117,116 +106,383 @@ _frisk_down_0_data:
 	.byte	$80
 _frisk_down_1_data:
 	.byte	$00
-	.byte	$00
+	.byte	$01
 	.byte	$01
 	.byte	$00
 	.byte	$08
-	.byte	$00
+	.byte	$01
 	.byte	$02
 	.byte	$00
 	.byte	$00
-	.byte	$08
+	.byte	$09
 	.byte	$03
 	.byte	$00
 	.byte	$08
-	.byte	$08
+	.byte	$09
 	.byte	$04
 	.byte	$00
 	.byte	$00
-	.byte	$10
+	.byte	$11
 	.byte	$09
 	.byte	$00
 	.byte	$08
-	.byte	$10
+	.byte	$11
 	.byte	$06
 	.byte	$00
 	.byte	$00
-	.byte	$18
+	.byte	$19
 	.byte	$0A
 	.byte	$00
 	.byte	$08
-	.byte	$18
+	.byte	$19
 	.byte	$0B
 	.byte	$00
 	.byte	$80
 _frisk_down_2_data:
 	.byte	$00
-	.byte	$00
+	.byte	$01
 	.byte	$01
 	.byte	$00
 	.byte	$08
-	.byte	$00
-	.byte	$02
-	.byte	$00
-	.byte	$00
-	.byte	$08
-	.byte	$03
-	.byte	$00
-	.byte	$08
-	.byte	$08
-	.byte	$04
-	.byte	$00
-	.byte	$00
-	.byte	$10
-	.byte	$05
-	.byte	$00
-	.byte	$08
-	.byte	$10
-	.byte	$06
-	.byte	$00
-	.byte	$00
-	.byte	$18
-	.byte	$07
-	.byte	$00
-	.byte	$08
-	.byte	$18
-	.byte	$08
-	.byte	$00
-	.byte	$80
-_frisk_down_3_data:
-	.byte	$00
-	.byte	$00
 	.byte	$01
-	.byte	$00
-	.byte	$08
-	.byte	$00
 	.byte	$02
 	.byte	$00
 	.byte	$00
-	.byte	$08
+	.byte	$09
 	.byte	$03
 	.byte	$00
 	.byte	$08
-	.byte	$08
+	.byte	$09
 	.byte	$04
 	.byte	$00
 	.byte	$00
-	.byte	$10
+	.byte	$11
 	.byte	$05
 	.byte	$00
 	.byte	$08
-	.byte	$10
+	.byte	$11
 	.byte	$0C
 	.byte	$00
 	.byte	$00
-	.byte	$18
+	.byte	$19
 	.byte	$0D
 	.byte	$00
 	.byte	$08
-	.byte	$18
+	.byte	$19
 	.byte	$0E
 	.byte	$00
 	.byte	$80
-_frisk_down:
+_frisk_left_0_data:
+	.byte	$00
+	.byte	$00
+	.byte	$0F
+	.byte	$00
+	.byte	$08
+	.byte	$00
+	.byte	$10
+	.byte	$00
+	.byte	$00
+	.byte	$08
+	.byte	$11
+	.byte	$00
+	.byte	$08
+	.byte	$08
+	.byte	$12
+	.byte	$00
+	.byte	$00
+	.byte	$10
+	.byte	$13
+	.byte	$00
+	.byte	$08
+	.byte	$10
+	.byte	$14
+	.byte	$00
+	.byte	$00
+	.byte	$18
+	.byte	$15
+	.byte	$00
+	.byte	$08
+	.byte	$18
+	.byte	$16
+	.byte	$00
+	.byte	$80
+_frisk_left_1_data:
+	.byte	$00
+	.byte	$01
+	.byte	$0F
+	.byte	$00
+	.byte	$08
+	.byte	$01
+	.byte	$10
+	.byte	$00
+	.byte	$00
+	.byte	$09
+	.byte	$11
+	.byte	$00
+	.byte	$08
+	.byte	$09
+	.byte	$12
+	.byte	$00
+	.byte	$00
+	.byte	$11
+	.byte	$17
+	.byte	$00
+	.byte	$08
+	.byte	$11
+	.byte	$18
+	.byte	$00
+	.byte	$00
+	.byte	$19
+	.byte	$19
+	.byte	$00
+	.byte	$08
+	.byte	$19
+	.byte	$1A
+	.byte	$00
+	.byte	$80
+_frisk_right_0_data:
+	.byte	$08
+	.byte	$00
+	.byte	$0F
+	.byte	$40
+	.byte	$00
+	.byte	$00
+	.byte	$10
+	.byte	$40
+	.byte	$08
+	.byte	$08
+	.byte	$11
+	.byte	$40
+	.byte	$00
+	.byte	$08
+	.byte	$12
+	.byte	$40
+	.byte	$08
+	.byte	$10
+	.byte	$13
+	.byte	$40
+	.byte	$00
+	.byte	$10
+	.byte	$14
+	.byte	$40
+	.byte	$08
+	.byte	$18
+	.byte	$15
+	.byte	$40
+	.byte	$00
+	.byte	$18
+	.byte	$16
+	.byte	$40
+	.byte	$80
+_frisk_right_1_data:
+	.byte	$08
+	.byte	$01
+	.byte	$0F
+	.byte	$40
+	.byte	$00
+	.byte	$01
+	.byte	$10
+	.byte	$40
+	.byte	$08
+	.byte	$09
+	.byte	$11
+	.byte	$40
+	.byte	$00
+	.byte	$09
+	.byte	$12
+	.byte	$40
+	.byte	$08
+	.byte	$11
+	.byte	$17
+	.byte	$40
+	.byte	$00
+	.byte	$11
+	.byte	$18
+	.byte	$40
+	.byte	$08
+	.byte	$19
+	.byte	$19
+	.byte	$40
+	.byte	$00
+	.byte	$19
+	.byte	$1A
+	.byte	$40
+	.byte	$80
+_frisk_up_0_data:
+	.byte	$00
+	.byte	$00
+	.byte	$1D
+	.byte	$00
+	.byte	$08
+	.byte	$00
+	.byte	$1E
+	.byte	$00
+	.byte	$00
+	.byte	$08
+	.byte	$1F
+	.byte	$00
+	.byte	$08
+	.byte	$08
+	.byte	$20
+	.byte	$00
+	.byte	$08
+	.byte	$10
+	.byte	$1C
+	.byte	$00
+	.byte	$00
+	.byte	$10
+	.byte	$1B
+	.byte	$00
+	.byte	$09
+	.byte	$18
+	.byte	$07
+	.byte	$40
+	.byte	$01
+	.byte	$18
+	.byte	$08
+	.byte	$40
+	.byte	$80
+_frisk_up_1_data:
+	.byte	$00
+	.byte	$01
+	.byte	$1D
+	.byte	$00
+	.byte	$08
+	.byte	$01
+	.byte	$1E
+	.byte	$00
+	.byte	$00
+	.byte	$09
+	.byte	$1F
+	.byte	$00
+	.byte	$08
+	.byte	$09
+	.byte	$20
+	.byte	$00
+	.byte	$08
+	.byte	$11
+	.byte	$21
+	.byte	$00
+	.byte	$00
+	.byte	$11
+	.byte	$1B
+	.byte	$00
+	.byte	$09
+	.byte	$19
+	.byte	$22
+	.byte	$40
+	.byte	$01
+	.byte	$19
+	.byte	$23
+	.byte	$40
+	.byte	$80
+_frisk_up_2_data:
+	.byte	$00
+	.byte	$01
+	.byte	$1D
+	.byte	$00
+	.byte	$08
+	.byte	$01
+	.byte	$1E
+	.byte	$00
+	.byte	$00
+	.byte	$09
+	.byte	$1F
+	.byte	$00
+	.byte	$08
+	.byte	$09
+	.byte	$20
+	.byte	$00
+	.byte	$00
+	.byte	$11
+	.byte	$24
+	.byte	$00
+	.byte	$08
+	.byte	$11
+	.byte	$1C
+	.byte	$00
+	.byte	$00
+	.byte	$19
+	.byte	$22
+	.byte	$00
+	.byte	$08
+	.byte	$19
+	.byte	$23
+	.byte	$00
+	.byte	$80
+_frisk:
 	.addr	_frisk_down_0_data
 	.addr	_frisk_down_1_data
+	.addr	_frisk_down_0_data
 	.addr	_frisk_down_2_data
-	.addr	_frisk_down_3_data
+	.addr	_frisk_up_0_data
+	.addr	_frisk_up_1_data
+	.addr	_frisk_up_0_data
+	.addr	_frisk_up_2_data
+	.addr	_frisk_left_0_data
+	.addr	_frisk_left_1_data
+	.addr	_frisk_left_0_data
+	.addr	_frisk_left_1_data
+	.addr	_frisk_right_0_data
+	.addr	_frisk_right_1_data
+	.addr	_frisk_right_0_data
+	.addr	_frisk_right_1_data
+_LEFT_COLLISON:
+	.byte	$01
+_RIGHT_COLLISON:
+	.byte	$02
+_UP_COLLISON:
+	.byte	$04
+_DOWN_COLLISON:
+	.byte	$08
+_palette:
+	.byte	$14
+	.byte	$30
+	.byte	$24
+	.byte	$19
+	.byte	$14
+	.byte	$1C
+	.byte	$15
+	.byte	$2A
+	.byte	$14
+	.byte	$06
+	.byte	$27
+	.byte	$2C
+	.byte	$14
+	.byte	$06
+	.byte	$27
+	.byte	$2C
+	.byte	$14
+	.byte	$06
+	.byte	$27
+	.byte	$2C
+	.byte	$14
+	.byte	$06
+	.byte	$27
+	.byte	$2C
+	.byte	$14
+	.byte	$06
+	.byte	$27
+	.byte	$2C
+	.byte	$14
+	.byte	$06
+	.byte	$27
+	.byte	$2C
 
 .segment	"BSS"
 
 _pad1:
 	.res	1,$00
+_tempL:
+	.res	1,$00
+_tempR:
+	.res	1,$00
+_tempT:
+	.res	1,$00
+_tempD:
+	.res	1,$00
+_frisk_map_box:
+	.res	4,$00
 
 ; ---------------------------------------------------------------
 ; void __near__ frisk_frame_change (void)
@@ -308,6 +564,11 @@ L0005:	rts
 .segment	"CODE"
 
 ;
+; music_play(3);
+;
+	lda     #$03
+	jsr     _music_play
+;
 ; ppu_off();
 ;
 	jsr     _ppu_off
@@ -322,6 +583,18 @@ L0005:	rts
 ;
 	jsr     _ppu_on_all
 ;
+; frisk_map_box.width=16;
+;
+	ldx     #$00
+	lda     #$10
+	sta     _frisk_map_box+2
+;
+; frisk_map_box.height=8;
+;
+	ldx     #$00
+	lda     #$08
+	sta     _frisk_map_box+3
+;
 ; while(1){
 ;
 	jmp     L0004
@@ -330,9 +603,19 @@ L0005:	rts
 ;
 L0002:	jsr     _ppu_wait_nmi
 ;
+; if(state & 0x01){}
+;
+	ldx     #$00
+	lda     _state
+	ldx     #$00
+	and     #$01
+	stx     tmp1
+	ora     tmp1
+	jeq     L0005
+;
 ; pad1 = pad_poll(0);
 ;
-	lda     #$00
+L0005:	lda     #$00
 	jsr     _pad_poll
 	sta     _pad1
 ;
@@ -344,7 +627,13 @@ L0002:	jsr     _ppu_wait_nmi
 	and     #$02
 	stx     tmp1
 	ora     tmp1
-	jeq     L0005
+	jeq     L0006
+;
+; frisk_face = 2;
+;
+	ldx     #$00
+	lda     #$02
+	sta     _frisk_face
 ;
 ; player_x=player_x-1;
 ;
@@ -356,14 +645,20 @@ L0002:	jsr     _ppu_wait_nmi
 ;
 ; else if(pad1 & PAD_RIGHT){
 ;
-	jmp     L0007
-L0005:	ldx     #$00
+	jmp     L0008
+L0006:	ldx     #$00
 	lda     _pad1
 	ldx     #$00
 	and     #$01
 	stx     tmp1
 	ora     tmp1
-	jeq     L0007
+	jeq     L0008
+;
+; frisk_face = 3;
+;
+	ldx     #$00
+	lda     #$03
+	sta     _frisk_face
 ;
 ; player_x=player_x+1;
 ;
@@ -375,13 +670,19 @@ L0005:	ldx     #$00
 ;
 ; if(pad1 & PAD_UP){
 ;
-L0007:	ldx     #$00
+L0008:	ldx     #$00
 	lda     _pad1
 	ldx     #$00
 	and     #$08
 	stx     tmp1
 	ora     tmp1
-	jeq     L0008
+	jeq     L0009
+;
+; frisk_face = 1;
+;
+	ldx     #$00
+	lda     #$01
+	sta     _frisk_face
 ;
 ; player_y=player_y-1;
 ;
@@ -393,14 +694,20 @@ L0007:	ldx     #$00
 ;
 ; else if(pad1 & PAD_DOWN){
 ;
-	jmp     L000A
-L0008:	ldx     #$00
+	jmp     L000B
+L0009:	ldx     #$00
 	lda     _pad1
 	ldx     #$00
 	and     #$04
 	stx     tmp1
 	ora     tmp1
-	jeq     L000A
+	jeq     L000B
+;
+; frisk_face = 0;
+;
+	ldx     #$00
+	lda     #$00
+	sta     _frisk_face
 ;
 ; player_y=player_y+1;
 ;
@@ -412,44 +719,44 @@ L0008:	ldx     #$00
 ;
 ; if(!(pad1 & PAD_LEFT)&&!(pad1 & PAD_RIGHT)&&!(pad1 & PAD_UP)&&!(pad1 & PAD_DOWN)){
 ;
-L000A:	ldx     #$00
+L000B:	ldx     #$00
 	lda     _pad1
 	ldx     #$00
 	and     #$02
 	jsr     bnegax
-	jeq     L000C
+	jeq     L000D
 	ldx     #$00
 	lda     _pad1
 	ldx     #$00
 	and     #$01
 	jsr     bnegax
-	jeq     L000C
+	jeq     L000D
 	ldx     #$00
 	lda     _pad1
 	ldx     #$00
 	and     #$08
 	jsr     bnegax
-	jeq     L000C
+	jeq     L000D
 	ldx     #$00
 	lda     _pad1
 	ldx     #$00
 	and     #$04
 	jsr     bnegax
-	jne     L000D
-L000C:	ldx     #$00
-	lda     #$00
-	jeq     L000E
+	jne     L000E
 L000D:	ldx     #$00
+	lda     #$00
+	jeq     L000F
+L000E:	ldx     #$00
 	lda     #$01
-L000E:	jeq     L000B
+L000F:	jeq     L000C
 ;
-; frisk_frame=0;
+; frisk_frame = 0;
 ;
 	ldx     #$00
 	lda     #$00
 	sta     _frisk_frame
 ;
-; frisk_frame_wait=0;
+; frisk_frame_wait = 0;
 ;
 	ldx     #$00
 	lda     #$00
@@ -457,32 +764,58 @@ L000E:	jeq     L000B
 ;
 ; else
 ;
-	jmp     L000F
+	jmp     L0010
 ;
 ; frisk_frame_change();
 ;
-L000B:	jsr     _frisk_frame_change
+L000C:	jsr     _frisk_frame_change
+;
+; map_frisk_collison=0;
+;
+L0010:	ldx     #$00
+	lda     #$00
+	sta     _map_frisk_collison
+;
+; frisk_map_box.x = player_x;
+;
+	ldx     #$00
+	lda     _player_x
+	sta     _frisk_map_box
+;
+; frisk_map_box.y = player_y+24;
+;
+	ldx     #$00
+	lda     _player_y
+	ldy     #$18
+	jsr     incaxy
+	ldx     #$00
+	sta     _frisk_map_box+1
 ;
 ; oam_clear();
 ;
-L000F:	jsr     _oam_clear
+	jsr     _oam_clear
 ;
-; oam_meta_spr(player_x, player_y , frisk_down[frisk_frame]);
+; oam_meta_spr(player_x, player_y , frisk[frisk_face][frisk_frame]);
 ;
 	lda     _player_x
 	jsr     pusha
 	lda     _player_y
 	jsr     pusha
 	ldx     #$00
-	lda     _frisk_frame
-	jsr     aslax1
+	lda     _frisk_face
+	jsr     aslax3
 	clc
-	adc     #<(_frisk_down)
+	adc     #<(_frisk)
 	tay
 	txa
-	adc     #>(_frisk_down)
+	adc     #>(_frisk)
 	tax
 	tya
+	jsr     pushax
+	ldx     #$00
+	lda     _frisk_frame
+	jsr     aslax1
+	jsr     tosaddax
 	ldy     #$01
 	jsr     ldaxidx
 	jsr     _oam_meta_spr

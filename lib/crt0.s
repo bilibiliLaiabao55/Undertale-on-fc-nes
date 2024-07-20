@@ -252,21 +252,21 @@ detectNTSC:
 
 	jmp _main			;no parameters
 
-	.include "../assets/LIB/neslib.s"
-	.include "../assets/LIB/nesdoug.s"
-	.include "../assets/MUSIC/famitone2.s"
+	.include "assets/LIB/neslib.s"
+	.include "assets/LIB/nesdoug.s"
+	.include "assets/MUSIC/famitone2.s"
 	
 	
 .segment "RODATA"
 
 music_data:
-;	.include "music.s"
+	.include "music.s"
 
 
 
 	.if(FT_SFX_ENABLE)
 sounds_data:
-;	.include "sounds.s"
+	;.include "sounds.s"
 	.endif
 
 	
