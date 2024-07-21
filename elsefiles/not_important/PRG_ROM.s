@@ -18,7 +18,11 @@
 	.import		_oam_clear
 	.import		_oam_meta_spr
 	.import		_music_play
+	.import		_music_stop
 	.import		_pad_poll
+	.import		_pal_fade_to
+	.export		_bankLevel
+	.export		_bankBuffer
 	.export		_frisk_down_0_data
 	.export		_frisk_down_1_data
 	.export		_frisk_down_2_data
@@ -30,18 +34,29 @@
 	.export		_frisk_up_1_data
 	.export		_frisk_up_2_data
 	.export		_frisk
+	.export		_flowey_laugh_to_0_data
+	.export		_flowey_laugh_to_1_data
+	.export		_flowey_laugh_to_2_data
+	.export		_flowey_laugh_to
+	.export		_flowey_laugh_0_data
+	.export		_flowey_laugh_1_data
+	.export		_flowey_laugh
+	.export		_flowey_talk_0_data
+	.export		_flowey_talk_1_data
+	.export		_flowey_talk
 	.export		_player_x
 	.export		_player_y
 	.export		_pad1
 	.export		_frisk_frame
 	.export		_frisk_frame_wait
 	.export		_frisk_face
-	.export		_state
 	.export		_map_frisk_collison
+	.export		_state
 	.export		_tempL
 	.export		_tempR
 	.export		_tempT
 	.export		_tempD
+	.export		_pal_had_fade_not
 	.export		_frisk_map_box
 	.export		_LEFT_COLLISON
 	.export		_RIGHT_COLLISON
@@ -54,18 +69,18 @@
 .segment	"DATA"
 
 _player_x:
-	.byte	$00
+	.byte	$78
 _player_y:
-	.byte	$00
+	.byte	$C0
 _frisk_frame:
 	.byte	$00
 _frisk_frame_wait:
 	.byte	$00
 _frisk_face:
-	.byte	$00
-_state:
 	.byte	$01
 _map_frisk_collison:
+	.byte	$00
+_pal_had_fade_not:
 	.byte	$00
 
 .segment	"RODATA"
@@ -427,6 +442,166 @@ _frisk:
 	.addr	_frisk_right_1_data
 	.addr	_frisk_right_0_data
 	.addr	_frisk_right_1_data
+_flowey_laugh_to_0_data:
+	.byte	$00
+	.byte	$08
+	.byte	$25
+	.byte	$01
+	.byte	$08
+	.byte	$08
+	.byte	$26
+	.byte	$01
+	.byte	$00
+	.byte	$10
+	.byte	$27
+	.byte	$01
+	.byte	$08
+	.byte	$10
+	.byte	$28
+	.byte	$01
+	.byte	$80
+_flowey_laugh_to_1_data:
+	.byte	$00
+	.byte	$08
+	.byte	$2B
+	.byte	$01
+	.byte	$08
+	.byte	$08
+	.byte	$2C
+	.byte	$01
+	.byte	$00
+	.byte	$10
+	.byte	$27
+	.byte	$01
+	.byte	$08
+	.byte	$10
+	.byte	$28
+	.byte	$01
+	.byte	$80
+_flowey_laugh_to_2_data:
+	.byte	$00
+	.byte	$00
+	.byte	$2D
+	.byte	$01
+	.byte	$08
+	.byte	$00
+	.byte	$2E
+	.byte	$01
+	.byte	$00
+	.byte	$08
+	.byte	$2F
+	.byte	$01
+	.byte	$08
+	.byte	$08
+	.byte	$30
+	.byte	$01
+	.byte	$00
+	.byte	$10
+	.byte	$27
+	.byte	$01
+	.byte	$08
+	.byte	$10
+	.byte	$28
+	.byte	$01
+	.byte	$80
+_flowey_laugh_to:
+	.addr	_flowey_laugh_to_0_data
+	.addr	_flowey_laugh_to_1_data
+	.addr	_flowey_laugh_to_2_data
+_flowey_laugh_0_data:
+	.byte	$00
+	.byte	$00
+	.byte	$2D
+	.byte	$01
+	.byte	$08
+	.byte	$00
+	.byte	$2E
+	.byte	$01
+	.byte	$00
+	.byte	$08
+	.byte	$2F
+	.byte	$01
+	.byte	$08
+	.byte	$08
+	.byte	$30
+	.byte	$01
+	.byte	$00
+	.byte	$10
+	.byte	$27
+	.byte	$01
+	.byte	$08
+	.byte	$10
+	.byte	$28
+	.byte	$01
+	.byte	$80
+_flowey_laugh_1_data:
+	.byte	$00
+	.byte	$00
+	.byte	$2D
+	.byte	$01
+	.byte	$08
+	.byte	$00
+	.byte	$2E
+	.byte	$01
+	.byte	$00
+	.byte	$08
+	.byte	$31
+	.byte	$01
+	.byte	$08
+	.byte	$08
+	.byte	$32
+	.byte	$01
+	.byte	$00
+	.byte	$10
+	.byte	$27
+	.byte	$01
+	.byte	$08
+	.byte	$10
+	.byte	$28
+	.byte	$01
+	.byte	$80
+_flowey_laugh:
+	.addr	_flowey_laugh_0_data
+	.addr	_flowey_laugh_1_data
+_flowey_talk_0_data:
+	.byte	$00
+	.byte	$00
+	.byte	$25
+	.byte	$01
+	.byte	$08
+	.byte	$00
+	.byte	$26
+	.byte	$01
+	.byte	$00
+	.byte	$08
+	.byte	$27
+	.byte	$01
+	.byte	$08
+	.byte	$08
+	.byte	$28
+	.byte	$01
+	.byte	$80
+_flowey_talk_1_data:
+	.byte	$00
+	.byte	$00
+	.byte	$29
+	.byte	$01
+	.byte	$08
+	.byte	$00
+	.byte	$2A
+	.byte	$01
+	.byte	$00
+	.byte	$08
+	.byte	$27
+	.byte	$01
+	.byte	$08
+	.byte	$08
+	.byte	$28
+	.byte	$01
+	.byte	$80
+_flowey_talk:
+	.addr	_flowey_talk_0_data
+	.addr	_flowey_talk_1_data
 _LEFT_COLLISON:
 	.byte	$01
 _RIGHT_COLLISON:
@@ -437,33 +612,33 @@ _DOWN_COLLISON:
 	.byte	$08
 _palette:
 	.byte	$14
+	.byte	$10
+	.byte	$0F
 	.byte	$30
-	.byte	$24
-	.byte	$19
 	.byte	$14
-	.byte	$1C
-	.byte	$15
+	.byte	$10
+	.byte	$0F
+	.byte	$27
+	.byte	$14
+	.byte	$06
+	.byte	$27
+	.byte	$2C
+	.byte	$14
+	.byte	$06
+	.byte	$27
+	.byte	$2C
+	.byte	$14
+	.byte	$06
+	.byte	$27
+	.byte	$2C
+	.byte	$14
+	.byte	$27
+	.byte	$0F
 	.byte	$2A
 	.byte	$14
-	.byte	$06
+	.byte	$10
+	.byte	$0F
 	.byte	$27
-	.byte	$2C
-	.byte	$14
-	.byte	$06
-	.byte	$27
-	.byte	$2C
-	.byte	$14
-	.byte	$06
-	.byte	$27
-	.byte	$2C
-	.byte	$14
-	.byte	$06
-	.byte	$27
-	.byte	$2C
-	.byte	$14
-	.byte	$06
-	.byte	$27
-	.byte	$2C
 	.byte	$14
 	.byte	$06
 	.byte	$27
@@ -471,7 +646,13 @@ _palette:
 
 .segment	"BSS"
 
+_bankLevel:
+	.res	1,$00
+_bankBuffer:
+	.res	10,$00
 _pad1:
+	.res	1,$00
+_state:
 	.res	1,$00
 _tempL:
 	.res	1,$00
@@ -564,9 +745,9 @@ L0005:	rts
 .segment	"CODE"
 
 ;
-; music_play(3);
+; music_play(0);
 ;
-	lda     #$03
+	lda     #$00
 	jsr     _music_play
 ;
 ; ppu_off();
@@ -583,6 +764,13 @@ L0005:	rts
 ;
 	jsr     _ppu_on_all
 ;
+; pal_fade_to(0,4);
+;
+	lda     #$00
+	jsr     pusha
+	lda     #$04
+	jsr     _pal_fade_to
+;
 ; frisk_map_box.width=16;
 ;
 	ldx     #$00
@@ -597,37 +785,109 @@ L0005:	rts
 ;
 ; while(1){
 ;
-	jmp     L0004
+	jmp     L0007
 ;
 ; ppu_wait_nmi();
 ;
 L0002:	jsr     _ppu_wait_nmi
 ;
-; if(state & 0x01){}
-;
-	ldx     #$00
-	lda     _state
-	ldx     #$00
-	and     #$01
-	stx     tmp1
-	ora     tmp1
-	jeq     L0005
-;
 ; pad1 = pad_poll(0);
 ;
-L0005:	lda     #$00
+	lda     #$00
 	jsr     _pad_poll
 	sta     _pad1
 ;
-; if(pad1 & PAD_LEFT){
+; if(state == 0){
 ;
 	ldx     #$00
+	lda     _state
+	cmp     #$00
+	jsr     booleq
+	jeq     L0006
+;
+; if(pad1 & PAD_START){
+;
+	ldx     #$00
+	lda     _pad1
+	ldx     #$00
+	and     #$10
+	stx     tmp1
+	ora     tmp1
+	jeq     L0006
+;
+; music_stop();
+;
+	jsr     _music_stop
+;
+; music_play(1);
+;
+	lda     #$01
+	jsr     _music_play
+;
+; pal_fade_to(4,0);
+;
+	lda     #$04
+	jsr     pusha
+	lda     #$00
+	jsr     _pal_fade_to
+;
+; state = 1;
+;
+	ldx     #$00
+	lda     #$01
+	sta     _state
+;
+; if(state == 1){
+;
+L0006:	ldx     #$00
+	lda     _state
+	cmp     #$01
+	jsr     booleq
+	jeq     L0007
+;
+; if(pal_had_fade_not == 0){
+;
+	ldx     #$00
+	lda     _pal_had_fade_not
+	cmp     #$00
+	jsr     booleq
+	jeq     L0008
+;
+; pal_fade_to(0,4);
+;
+	lda     #$00
+	jsr     pusha
+	lda     #$04
+	jsr     _pal_fade_to
+;
+; pal_had_fade_not = 1;
+;
+	ldx     #$00
+	lda     #$01
+	sta     _pal_had_fade_not
+;
+; if((pad1 & PAD_LEFT)&&(player_x>=0x02)){
+;
+L0008:	ldx     #$00
 	lda     _pad1
 	ldx     #$00
 	and     #$02
 	stx     tmp1
 	ora     tmp1
-	jeq     L0006
+	jeq     L000A
+	ldx     #$00
+	lda     _player_x
+	cmp     #$02
+	lda     #$00
+	ldx     #$00
+	rol     a
+	jne     L000B
+L000A:	ldx     #$00
+	lda     #$00
+	jeq     L000C
+L000B:	ldx     #$00
+	lda     #$01
+L000C:	jeq     L0009
 ;
 ; frisk_face = 2;
 ;
@@ -643,16 +903,27 @@ L0005:	lda     #$00
 	ldx     #$00
 	sta     _player_x
 ;
-; else if(pad1 & PAD_RIGHT){
+; else if((pad1 & PAD_RIGHT)&&(player_x<=0xF0)){
 ;
-	jmp     L0008
-L0006:	ldx     #$00
+	jmp     L000E
+L0009:	ldx     #$00
 	lda     _pad1
 	ldx     #$00
 	and     #$01
 	stx     tmp1
 	ora     tmp1
-	jeq     L0008
+	jeq     L000F
+	ldx     #$00
+	lda     _player_x
+	cmp     #$F1
+	jsr     boolult
+	jne     L0010
+L000F:	ldx     #$00
+	lda     #$00
+	jeq     L0011
+L0010:	ldx     #$00
+	lda     #$01
+L0011:	jeq     L000E
 ;
 ; frisk_face = 3;
 ;
@@ -668,15 +939,28 @@ L0006:	ldx     #$00
 	ldx     #$00
 	sta     _player_x
 ;
-; if(pad1 & PAD_UP){
+; if((pad1 & PAD_UP)&&(player_y>=0x02)){
 ;
-L0008:	ldx     #$00
+L000E:	ldx     #$00
 	lda     _pad1
 	ldx     #$00
 	and     #$08
 	stx     tmp1
 	ora     tmp1
-	jeq     L0009
+	jeq     L0013
+	ldx     #$00
+	lda     _player_y
+	cmp     #$02
+	lda     #$00
+	ldx     #$00
+	rol     a
+	jne     L0014
+L0013:	ldx     #$00
+	lda     #$00
+	jeq     L0015
+L0014:	ldx     #$00
+	lda     #$01
+L0015:	jeq     L0012
 ;
 ; frisk_face = 1;
 ;
@@ -692,16 +976,27 @@ L0008:	ldx     #$00
 	ldx     #$00
 	sta     _player_y
 ;
-; else if(pad1 & PAD_DOWN){
+; else if((pad1 & PAD_DOWN)&&(player_y<=0xC5)){
 ;
-	jmp     L000B
-L0009:	ldx     #$00
+	jmp     L0017
+L0012:	ldx     #$00
 	lda     _pad1
 	ldx     #$00
 	and     #$04
 	stx     tmp1
 	ora     tmp1
-	jeq     L000B
+	jeq     L0018
+	ldx     #$00
+	lda     _player_y
+	cmp     #$C6
+	jsr     boolult
+	jne     L0019
+L0018:	ldx     #$00
+	lda     #$00
+	jeq     L001A
+L0019:	ldx     #$00
+	lda     #$01
+L001A:	jeq     L0017
 ;
 ; frisk_face = 0;
 ;
@@ -719,36 +1014,36 @@ L0009:	ldx     #$00
 ;
 ; if(!(pad1 & PAD_LEFT)&&!(pad1 & PAD_RIGHT)&&!(pad1 & PAD_UP)&&!(pad1 & PAD_DOWN)){
 ;
-L000B:	ldx     #$00
+L0017:	ldx     #$00
 	lda     _pad1
 	ldx     #$00
 	and     #$02
 	jsr     bnegax
-	jeq     L000D
+	jeq     L001C
 	ldx     #$00
 	lda     _pad1
 	ldx     #$00
 	and     #$01
 	jsr     bnegax
-	jeq     L000D
+	jeq     L001C
 	ldx     #$00
 	lda     _pad1
 	ldx     #$00
 	and     #$08
 	jsr     bnegax
-	jeq     L000D
+	jeq     L001C
 	ldx     #$00
 	lda     _pad1
 	ldx     #$00
 	and     #$04
 	jsr     bnegax
-	jne     L000E
-L000D:	ldx     #$00
+	jne     L001D
+L001C:	ldx     #$00
 	lda     #$00
-	jeq     L000F
-L000E:	ldx     #$00
+	jeq     L001E
+L001D:	ldx     #$00
 	lda     #$01
-L000F:	jeq     L000C
+L001E:	jeq     L001B
 ;
 ; frisk_frame = 0;
 ;
@@ -764,15 +1059,15 @@ L000F:	jeq     L000C
 ;
 ; else
 ;
-	jmp     L0010
+	jmp     L001F
 ;
 ; frisk_frame_change();
 ;
-L000C:	jsr     _frisk_frame_change
+L001B:	jsr     _frisk_frame_change
 ;
 ; map_frisk_collison=0;
 ;
-L0010:	ldx     #$00
+L001F:	ldx     #$00
 	lda     #$00
 	sta     _map_frisk_collison
 ;
@@ -820,9 +1115,19 @@ L0010:	ldx     #$00
 	jsr     ldaxidx
 	jsr     _oam_meta_spr
 ;
+; oam_meta_spr(120, 100 , flowey_talk[0]);
+;
+	lda     #$78
+	jsr     pusha
+	lda     #$64
+	jsr     pusha
+	lda     _flowey_talk
+	ldx     _flowey_talk+1
+	jsr     _oam_meta_spr
+;
 ; while(1){
 ;
-L0004:	jmp     L0002
+L0007:	jmp     L0002
 ;
 ; }
 ;

@@ -111,7 +111,11 @@ Current file: elsefiles/NOT_IMPORTANT/PRG_ROM.s
 000000r 1               	.import		_oam_clear
 000000r 1               	.import		_oam_meta_spr
 000000r 1               	.import		_music_play
+000000r 1               	.import		_music_stop
 000000r 1               	.import		_pad_poll
+000000r 1               	.import		_pal_fade_to
+000000r 1               	.export		_bankLevel
+000000r 1               	.export		_bankBuffer
 000000r 1               	.export		_frisk_down_0_data
 000000r 1               	.export		_frisk_down_1_data
 000000r 1               	.export		_frisk_down_2_data
@@ -123,18 +127,29 @@ Current file: elsefiles/NOT_IMPORTANT/PRG_ROM.s
 000000r 1               	.export		_frisk_up_1_data
 000000r 1               	.export		_frisk_up_2_data
 000000r 1               	.export		_frisk
+000000r 1               	.export		_flowey_laugh_to_0_data
+000000r 1               	.export		_flowey_laugh_to_1_data
+000000r 1               	.export		_flowey_laugh_to_2_data
+000000r 1               	.export		_flowey_laugh_to
+000000r 1               	.export		_flowey_laugh_0_data
+000000r 1               	.export		_flowey_laugh_1_data
+000000r 1               	.export		_flowey_laugh
+000000r 1               	.export		_flowey_talk_0_data
+000000r 1               	.export		_flowey_talk_1_data
+000000r 1               	.export		_flowey_talk
 000000r 1               	.export		_player_x
 000000r 1               	.export		_player_y
 000000r 1               	.export		_pad1
 000000r 1               	.export		_frisk_frame
 000000r 1               	.export		_frisk_frame_wait
 000000r 1               	.export		_frisk_face
-000000r 1               	.export		_state
 000000r 1               	.export		_map_frisk_collison
+000000r 1               	.export		_state
 000000r 1               	.export		_tempL
 000000r 1               	.export		_tempR
 000000r 1               	.export		_tempT
 000000r 1               	.export		_tempD
+000000r 1               	.export		_pal_had_fade_not
 000000r 1               	.export		_frisk_map_box
 000000r 1               	.export		_LEFT_COLLISON
 000000r 1               	.export		_RIGHT_COLLISON
@@ -147,18 +162,18 @@ Current file: elsefiles/NOT_IMPORTANT/PRG_ROM.s
 000000r 1               .segment	"DATA"
 000000r 1               
 000000r 1               _player_x:
-000000r 1  00           	.byte	$00
+000000r 1  78           	.byte	$78
 000001r 1               _player_y:
-000001r 1  00           	.byte	$00
+000001r 1  C0           	.byte	$C0
 000002r 1               _frisk_frame:
 000002r 1  00           	.byte	$00
 000003r 1               _frisk_frame_wait:
 000003r 1  00           	.byte	$00
 000004r 1               _frisk_face:
-000004r 1  00           	.byte	$00
-000005r 1               _state:
-000005r 1  01           	.byte	$01
-000006r 1               _map_frisk_collison:
+000004r 1  01           	.byte	$01
+000005r 1               _map_frisk_collison:
+000005r 1  00           	.byte	$00
+000006r 1               _pal_had_fade_not:
 000006r 1  00           	.byte	$00
 000007r 1               
 000007r 1               .segment	"RODATA"
@@ -520,68 +535,236 @@ Current file: elsefiles/NOT_IMPORTANT/PRG_ROM.s
 000164r 1  rr rr        	.addr	_frisk_right_1_data
 000166r 1  rr rr        	.addr	_frisk_right_0_data
 000168r 1  rr rr        	.addr	_frisk_right_1_data
-00016Ar 1               _LEFT_COLLISON:
-00016Ar 1  01           	.byte	$01
-00016Br 1               _RIGHT_COLLISON:
-00016Br 1  02           	.byte	$02
-00016Cr 1               _UP_COLLISON:
-00016Cr 1  04           	.byte	$04
-00016Dr 1               _DOWN_COLLISON:
-00016Dr 1  08           	.byte	$08
-00016Er 1               _palette:
-00016Er 1  14           	.byte	$14
-00016Fr 1  30           	.byte	$30
-000170r 1  24           	.byte	$24
-000171r 1  19           	.byte	$19
-000172r 1  14           	.byte	$14
-000173r 1  1C           	.byte	$1C
-000174r 1  15           	.byte	$15
-000175r 1  2A           	.byte	$2A
-000176r 1  14           	.byte	$14
-000177r 1  06           	.byte	$06
-000178r 1  27           	.byte	$27
-000179r 1  2C           	.byte	$2C
-00017Ar 1  14           	.byte	$14
-00017Br 1  06           	.byte	$06
-00017Cr 1  27           	.byte	$27
-00017Dr 1  2C           	.byte	$2C
-00017Er 1  14           	.byte	$14
-00017Fr 1  06           	.byte	$06
-000180r 1  27           	.byte	$27
+00016Ar 1               _flowey_laugh_to_0_data:
+00016Ar 1  00           	.byte	$00
+00016Br 1  08           	.byte	$08
+00016Cr 1  25           	.byte	$25
+00016Dr 1  01           	.byte	$01
+00016Er 1  08           	.byte	$08
+00016Fr 1  08           	.byte	$08
+000170r 1  26           	.byte	$26
+000171r 1  01           	.byte	$01
+000172r 1  00           	.byte	$00
+000173r 1  10           	.byte	$10
+000174r 1  27           	.byte	$27
+000175r 1  01           	.byte	$01
+000176r 1  08           	.byte	$08
+000177r 1  10           	.byte	$10
+000178r 1  28           	.byte	$28
+000179r 1  01           	.byte	$01
+00017Ar 1  80           	.byte	$80
+00017Br 1               _flowey_laugh_to_1_data:
+00017Br 1  00           	.byte	$00
+00017Cr 1  08           	.byte	$08
+00017Dr 1  2B           	.byte	$2B
+00017Er 1  01           	.byte	$01
+00017Fr 1  08           	.byte	$08
+000180r 1  08           	.byte	$08
 000181r 1  2C           	.byte	$2C
-000182r 1  14           	.byte	$14
-000183r 1  06           	.byte	$06
-000184r 1  27           	.byte	$27
-000185r 1  2C           	.byte	$2C
-000186r 1  14           	.byte	$14
-000187r 1  06           	.byte	$06
-000188r 1  27           	.byte	$27
-000189r 1  2C           	.byte	$2C
-00018Ar 1  14           	.byte	$14
-00018Br 1  06           	.byte	$06
-00018Cr 1  27           	.byte	$27
-00018Dr 1  2C           	.byte	$2C
-00018Er 1               
-00018Er 1               .segment	"BSS"
+000182r 1  01           	.byte	$01
+000183r 1  00           	.byte	$00
+000184r 1  10           	.byte	$10
+000185r 1  27           	.byte	$27
+000186r 1  01           	.byte	$01
+000187r 1  08           	.byte	$08
+000188r 1  10           	.byte	$10
+000189r 1  28           	.byte	$28
+00018Ar 1  01           	.byte	$01
+00018Br 1  80           	.byte	$80
+00018Cr 1               _flowey_laugh_to_2_data:
+00018Cr 1  00           	.byte	$00
+00018Dr 1  00           	.byte	$00
+00018Er 1  2D           	.byte	$2D
+00018Fr 1  01           	.byte	$01
+000190r 1  08           	.byte	$08
+000191r 1  00           	.byte	$00
+000192r 1  2E           	.byte	$2E
+000193r 1  01           	.byte	$01
+000194r 1  00           	.byte	$00
+000195r 1  08           	.byte	$08
+000196r 1  2F           	.byte	$2F
+000197r 1  01           	.byte	$01
+000198r 1  08           	.byte	$08
+000199r 1  08           	.byte	$08
+00019Ar 1  30           	.byte	$30
+00019Br 1  01           	.byte	$01
+00019Cr 1  00           	.byte	$00
+00019Dr 1  10           	.byte	$10
+00019Er 1  27           	.byte	$27
+00019Fr 1  01           	.byte	$01
+0001A0r 1  08           	.byte	$08
+0001A1r 1  10           	.byte	$10
+0001A2r 1  28           	.byte	$28
+0001A3r 1  01           	.byte	$01
+0001A4r 1  80           	.byte	$80
+0001A5r 1               _flowey_laugh_to:
+0001A5r 1  rr rr        	.addr	_flowey_laugh_to_0_data
+0001A7r 1  rr rr        	.addr	_flowey_laugh_to_1_data
+0001A9r 1  rr rr        	.addr	_flowey_laugh_to_2_data
+0001ABr 1               _flowey_laugh_0_data:
+0001ABr 1  00           	.byte	$00
+0001ACr 1  00           	.byte	$00
+0001ADr 1  2D           	.byte	$2D
+0001AEr 1  01           	.byte	$01
+0001AFr 1  08           	.byte	$08
+0001B0r 1  00           	.byte	$00
+0001B1r 1  2E           	.byte	$2E
+0001B2r 1  01           	.byte	$01
+0001B3r 1  00           	.byte	$00
+0001B4r 1  08           	.byte	$08
+0001B5r 1  2F           	.byte	$2F
+0001B6r 1  01           	.byte	$01
+0001B7r 1  08           	.byte	$08
+0001B8r 1  08           	.byte	$08
+0001B9r 1  30           	.byte	$30
+0001BAr 1  01           	.byte	$01
+0001BBr 1  00           	.byte	$00
+0001BCr 1  10           	.byte	$10
+0001BDr 1  27           	.byte	$27
+0001BEr 1  01           	.byte	$01
+0001BFr 1  08           	.byte	$08
+0001C0r 1  10           	.byte	$10
+0001C1r 1  28           	.byte	$28
+0001C2r 1  01           	.byte	$01
+0001C3r 1  80           	.byte	$80
+0001C4r 1               _flowey_laugh_1_data:
+0001C4r 1  00           	.byte	$00
+0001C5r 1  00           	.byte	$00
+0001C6r 1  2D           	.byte	$2D
+0001C7r 1  01           	.byte	$01
+0001C8r 1  08           	.byte	$08
+0001C9r 1  00           	.byte	$00
+0001CAr 1  2E           	.byte	$2E
+0001CBr 1  01           	.byte	$01
+0001CCr 1  00           	.byte	$00
+0001CDr 1  08           	.byte	$08
+0001CEr 1  31           	.byte	$31
+0001CFr 1  01           	.byte	$01
+0001D0r 1  08           	.byte	$08
+0001D1r 1  08           	.byte	$08
+0001D2r 1  32           	.byte	$32
+0001D3r 1  01           	.byte	$01
+0001D4r 1  00           	.byte	$00
+0001D5r 1  10           	.byte	$10
+0001D6r 1  27           	.byte	$27
+0001D7r 1  01           	.byte	$01
+0001D8r 1  08           	.byte	$08
+0001D9r 1  10           	.byte	$10
+0001DAr 1  28           	.byte	$28
+0001DBr 1  01           	.byte	$01
+0001DCr 1  80           	.byte	$80
+0001DDr 1               _flowey_laugh:
+0001DDr 1  rr rr        	.addr	_flowey_laugh_0_data
+0001DFr 1  rr rr        	.addr	_flowey_laugh_1_data
+0001E1r 1               _flowey_talk_0_data:
+0001E1r 1  00           	.byte	$00
+0001E2r 1  00           	.byte	$00
+0001E3r 1  25           	.byte	$25
+0001E4r 1  01           	.byte	$01
+0001E5r 1  08           	.byte	$08
+0001E6r 1  00           	.byte	$00
+0001E7r 1  26           	.byte	$26
+0001E8r 1  01           	.byte	$01
+0001E9r 1  00           	.byte	$00
+0001EAr 1  08           	.byte	$08
+0001EBr 1  27           	.byte	$27
+0001ECr 1  01           	.byte	$01
+0001EDr 1  08           	.byte	$08
+0001EEr 1  08           	.byte	$08
+0001EFr 1  28           	.byte	$28
+0001F0r 1  01           	.byte	$01
+0001F1r 1  80           	.byte	$80
+0001F2r 1               _flowey_talk_1_data:
+0001F2r 1  00           	.byte	$00
+0001F3r 1  00           	.byte	$00
+0001F4r 1  29           	.byte	$29
+0001F5r 1  01           	.byte	$01
+0001F6r 1  08           	.byte	$08
+0001F7r 1  00           	.byte	$00
+0001F8r 1  2A           	.byte	$2A
+0001F9r 1  01           	.byte	$01
+0001FAr 1  00           	.byte	$00
+0001FBr 1  08           	.byte	$08
+0001FCr 1  27           	.byte	$27
+0001FDr 1  01           	.byte	$01
+0001FEr 1  08           	.byte	$08
+0001FFr 1  08           	.byte	$08
+000200r 1  28           	.byte	$28
+000201r 1  01           	.byte	$01
+000202r 1  80           	.byte	$80
+000203r 1               _flowey_talk:
+000203r 1  rr rr        	.addr	_flowey_talk_0_data
+000205r 1  rr rr        	.addr	_flowey_talk_1_data
+000207r 1               _LEFT_COLLISON:
+000207r 1  01           	.byte	$01
+000208r 1               _RIGHT_COLLISON:
+000208r 1  02           	.byte	$02
+000209r 1               _UP_COLLISON:
+000209r 1  04           	.byte	$04
+00020Ar 1               _DOWN_COLLISON:
+00020Ar 1  08           	.byte	$08
+00020Br 1               _palette:
+00020Br 1  14           	.byte	$14
+00020Cr 1  10           	.byte	$10
+00020Dr 1  0F           	.byte	$0F
+00020Er 1  30           	.byte	$30
+00020Fr 1  14           	.byte	$14
+000210r 1  10           	.byte	$10
+000211r 1  0F           	.byte	$0F
+000212r 1  27           	.byte	$27
+000213r 1  14           	.byte	$14
+000214r 1  06           	.byte	$06
+000215r 1  27           	.byte	$27
+000216r 1  2C           	.byte	$2C
+000217r 1  14           	.byte	$14
+000218r 1  06           	.byte	$06
+000219r 1  27           	.byte	$27
+00021Ar 1  2C           	.byte	$2C
+00021Br 1  14           	.byte	$14
+00021Cr 1  06           	.byte	$06
+00021Dr 1  27           	.byte	$27
+00021Er 1  2C           	.byte	$2C
+00021Fr 1  14           	.byte	$14
+000220r 1  27           	.byte	$27
+000221r 1  0F           	.byte	$0F
+000222r 1  2A           	.byte	$2A
+000223r 1  14           	.byte	$14
+000224r 1  10           	.byte	$10
+000225r 1  0F           	.byte	$0F
+000226r 1  27           	.byte	$27
+000227r 1  14           	.byte	$14
+000228r 1  06           	.byte	$06
+000229r 1  27           	.byte	$27
+00022Ar 1  2C           	.byte	$2C
+00022Br 1               
+00022Br 1               .segment	"BSS"
 000000r 1               
-000000r 1               _pad1:
+000000r 1               _bankLevel:
 000000r 1  00           	.res	1,$00
-000001r 1               _tempL:
-000001r 1  00           	.res	1,$00
-000002r 1               _tempR:
-000002r 1  00           	.res	1,$00
-000003r 1               _tempT:
-000003r 1  00           	.res	1,$00
-000004r 1               _tempD:
-000004r 1  00           	.res	1,$00
-000005r 1               _frisk_map_box:
-000005r 1  00 00 00 00  	.res	4,$00
-000009r 1               
-000009r 1               ; ---------------------------------------------------------------
-000009r 1               ; void __near__ frisk_frame_change (void)
-000009r 1               ; ---------------------------------------------------------------
-000009r 1               
-000009r 1               .segment	"CODE"
+000001r 1               _bankBuffer:
+000001r 1  00 00 00 00  	.res	10,$00
+000005r 1  00 00 00 00  
+000009r 1  00 00        
+00000Br 1               _pad1:
+00000Br 1  00           	.res	1,$00
+00000Cr 1               _state:
+00000Cr 1  00           	.res	1,$00
+00000Dr 1               _tempL:
+00000Dr 1  00           	.res	1,$00
+00000Er 1               _tempR:
+00000Er 1  00           	.res	1,$00
+00000Fr 1               _tempT:
+00000Fr 1  00           	.res	1,$00
+000010r 1               _tempD:
+000010r 1  00           	.res	1,$00
+000011r 1               _frisk_map_box:
+000011r 1  00 00 00 00  	.res	4,$00
+000015r 1               
+000015r 1               ; ---------------------------------------------------------------
+000015r 1               ; void __near__ frisk_frame_change (void)
+000015r 1               ; ---------------------------------------------------------------
+000015r 1               
+000015r 1               .segment	"CODE"
 000000r 1               
 000000r 1               .proc	_frisk_frame_change: near
 000000r 1               
@@ -659,9 +842,9 @@ Current file: elsefiles/NOT_IMPORTANT/PRG_ROM.s
 00004Dr 1               .segment	"CODE"
 00004Dr 1               
 00004Dr 1               ;
-00004Dr 1               ; music_play(3);
+00004Dr 1               ; music_play(0);
 00004Dr 1               ;
-00004Dr 1  A9 03        	lda     #$03
+00004Dr 1  A9 00        	lda     #$00
 00004Fr 1  20 rr rr     	jsr     _music_play
 000052r 1               ;
 000052r 1               ; ppu_off();
@@ -678,262 +861,401 @@ Current file: elsefiles/NOT_IMPORTANT/PRG_ROM.s
 00005Cr 1               ;
 00005Cr 1  20 rr rr     	jsr     _ppu_on_all
 00005Fr 1               ;
-00005Fr 1               ; frisk_map_box.width=16;
+00005Fr 1               ; pal_fade_to(0,4);
 00005Fr 1               ;
-00005Fr 1  A2 00        	ldx     #$00
-000061r 1  A9 10        	lda     #$10
-000063r 1  8D rr rr     	sta     _frisk_map_box+2
-000066r 1               ;
-000066r 1               ; frisk_map_box.height=8;
-000066r 1               ;
-000066r 1  A2 00        	ldx     #$00
-000068r 1  A9 08        	lda     #$08
-00006Ar 1  8D rr rr     	sta     _frisk_map_box+3
-00006Dr 1               ;
-00006Dr 1               ; while(1){
-00006Dr 1               ;
-00006Dr 1  4C rr rr     	jmp     L0004
+00005Fr 1  A9 00        	lda     #$00
+000061r 1  20 rr rr     	jsr     pusha
+000064r 1  A9 04        	lda     #$04
+000066r 1  20 rr rr     	jsr     _pal_fade_to
+000069r 1               ;
+000069r 1               ; frisk_map_box.width=16;
+000069r 1               ;
+000069r 1  A2 00        	ldx     #$00
+00006Br 1  A9 10        	lda     #$10
+00006Dr 1  8D rr rr     	sta     _frisk_map_box+2
 000070r 1               ;
-000070r 1               ; ppu_wait_nmi();
+000070r 1               ; frisk_map_box.height=8;
 000070r 1               ;
-000070r 1  20 rr rr     L0002:	jsr     _ppu_wait_nmi
-000073r 1               ;
-000073r 1               ; if(state & 0x01){}
-000073r 1               ;
-000073r 1  A2 00        	ldx     #$00
-000075r 1  AD rr rr     	lda     _state
-000078r 1  A2 00        	ldx     #$00
-00007Ar 1  29 01        	and     #$01
-00007Cr 1  86 rr        	stx     tmp1
-00007Er 1  05 rr        	ora     tmp1
-000080r 1  D0 03 4C rr  	jeq     L0005
-000084r 1  rr           
+000070r 1  A2 00        	ldx     #$00
+000072r 1  A9 08        	lda     #$08
+000074r 1  8D rr rr     	sta     _frisk_map_box+3
+000077r 1               ;
+000077r 1               ; while(1){
+000077r 1               ;
+000077r 1  4C rr rr     	jmp     L0007
+00007Ar 1               ;
+00007Ar 1               ; ppu_wait_nmi();
+00007Ar 1               ;
+00007Ar 1  20 rr rr     L0002:	jsr     _ppu_wait_nmi
+00007Dr 1               ;
+00007Dr 1               ; pad1 = pad_poll(0);
+00007Dr 1               ;
+00007Dr 1  A9 00        	lda     #$00
+00007Fr 1  20 rr rr     	jsr     _pad_poll
+000082r 1  8D rr rr     	sta     _pad1
 000085r 1               ;
-000085r 1               ; pad1 = pad_poll(0);
+000085r 1               ; if(state == 0){
 000085r 1               ;
-000085r 1  A9 00        L0005:	lda     #$00
-000087r 1  20 rr rr     	jsr     _pad_poll
-00008Ar 1  8D rr rr     	sta     _pad1
-00008Dr 1               ;
-00008Dr 1               ; if(pad1 & PAD_LEFT){
-00008Dr 1               ;
-00008Dr 1  A2 00        	ldx     #$00
-00008Fr 1  AD rr rr     	lda     _pad1
-000092r 1  A2 00        	ldx     #$00
-000094r 1  29 02        	and     #$02
-000096r 1  86 rr        	stx     tmp1
-000098r 1  05 rr        	ora     tmp1
-00009Ar 1  D0 03 4C rr  	jeq     L0006
-00009Er 1  rr           
-00009Fr 1               ;
-00009Fr 1               ; frisk_face = 2;
-00009Fr 1               ;
-00009Fr 1  A2 00        	ldx     #$00
-0000A1r 1  A9 02        	lda     #$02
-0000A3r 1  8D rr rr     	sta     _frisk_face
+000085r 1  A2 00        	ldx     #$00
+000087r 1  AD rr rr     	lda     _state
+00008Ar 1  C9 00        	cmp     #$00
+00008Cr 1  20 rr rr     	jsr     booleq
+00008Fr 1  D0 03 4C rr  	jeq     L0006
+000093r 1  rr           
+000094r 1               ;
+000094r 1               ; if(pad1 & PAD_START){
+000094r 1               ;
+000094r 1  A2 00        	ldx     #$00
+000096r 1  AD rr rr     	lda     _pad1
+000099r 1  A2 00        	ldx     #$00
+00009Br 1  29 10        	and     #$10
+00009Dr 1  86 rr        	stx     tmp1
+00009Fr 1  05 rr        	ora     tmp1
+0000A1r 1  D0 03 4C rr  	jeq     L0006
+0000A5r 1  rr           
 0000A6r 1               ;
-0000A6r 1               ; player_x=player_x-1;
+0000A6r 1               ; music_stop();
 0000A6r 1               ;
-0000A6r 1  A2 00        	ldx     #$00
-0000A8r 1  AD rr rr     	lda     _player_x
-0000ABr 1  20 rr rr     	jsr     decax1
-0000AEr 1  A2 00        	ldx     #$00
-0000B0r 1  8D rr rr     	sta     _player_x
-0000B3r 1               ;
-0000B3r 1               ; else if(pad1 & PAD_RIGHT){
-0000B3r 1               ;
-0000B3r 1  4C rr rr     	jmp     L0008
-0000B6r 1  A2 00        L0006:	ldx     #$00
-0000B8r 1  AD rr rr     	lda     _pad1
-0000BBr 1  A2 00        	ldx     #$00
-0000BDr 1  29 01        	and     #$01
-0000BFr 1  86 rr        	stx     tmp1
-0000C1r 1  05 rr        	ora     tmp1
-0000C3r 1  D0 03 4C rr  	jeq     L0008
-0000C7r 1  rr           
-0000C8r 1               ;
-0000C8r 1               ; frisk_face = 3;
-0000C8r 1               ;
-0000C8r 1  A2 00        	ldx     #$00
-0000CAr 1  A9 03        	lda     #$03
-0000CCr 1  8D rr rr     	sta     _frisk_face
-0000CFr 1               ;
-0000CFr 1               ; player_x=player_x+1;
-0000CFr 1               ;
-0000CFr 1  A2 00        	ldx     #$00
-0000D1r 1  AD rr rr     	lda     _player_x
-0000D4r 1  20 rr rr     	jsr     incax1
-0000D7r 1  A2 00        	ldx     #$00
-0000D9r 1  8D rr rr     	sta     _player_x
-0000DCr 1               ;
-0000DCr 1               ; if(pad1 & PAD_UP){
-0000DCr 1               ;
-0000DCr 1  A2 00        L0008:	ldx     #$00
-0000DEr 1  AD rr rr     	lda     _pad1
-0000E1r 1  A2 00        	ldx     #$00
-0000E3r 1  29 08        	and     #$08
-0000E5r 1  86 rr        	stx     tmp1
-0000E7r 1  05 rr        	ora     tmp1
-0000E9r 1  D0 03 4C rr  	jeq     L0009
-0000EDr 1  rr           
+0000A6r 1  20 rr rr     	jsr     _music_stop
+0000A9r 1               ;
+0000A9r 1               ; music_play(1);
+0000A9r 1               ;
+0000A9r 1  A9 01        	lda     #$01
+0000ABr 1  20 rr rr     	jsr     _music_play
+0000AEr 1               ;
+0000AEr 1               ; pal_fade_to(4,0);
+0000AEr 1               ;
+0000AEr 1  A9 04        	lda     #$04
+0000B0r 1  20 rr rr     	jsr     pusha
+0000B3r 1  A9 00        	lda     #$00
+0000B5r 1  20 rr rr     	jsr     _pal_fade_to
+0000B8r 1               ;
+0000B8r 1               ; state = 1;
+0000B8r 1               ;
+0000B8r 1  A2 00        	ldx     #$00
+0000BAr 1  A9 01        	lda     #$01
+0000BCr 1  8D rr rr     	sta     _state
+0000BFr 1               ;
+0000BFr 1               ; if(state == 1){
+0000BFr 1               ;
+0000BFr 1  A2 00        L0006:	ldx     #$00
+0000C1r 1  AD rr rr     	lda     _state
+0000C4r 1  C9 01        	cmp     #$01
+0000C6r 1  20 rr rr     	jsr     booleq
+0000C9r 1  D0 03 4C rr  	jeq     L0007
+0000CDr 1  rr           
+0000CEr 1               ;
+0000CEr 1               ; if(pal_had_fade_not == 0){
+0000CEr 1               ;
+0000CEr 1  A2 00        	ldx     #$00
+0000D0r 1  AD rr rr     	lda     _pal_had_fade_not
+0000D3r 1  C9 00        	cmp     #$00
+0000D5r 1  20 rr rr     	jsr     booleq
+0000D8r 1  D0 03 4C rr  	jeq     L0008
+0000DCr 1  rr           
+0000DDr 1               ;
+0000DDr 1               ; pal_fade_to(0,4);
+0000DDr 1               ;
+0000DDr 1  A9 00        	lda     #$00
+0000DFr 1  20 rr rr     	jsr     pusha
+0000E2r 1  A9 04        	lda     #$04
+0000E4r 1  20 rr rr     	jsr     _pal_fade_to
+0000E7r 1               ;
+0000E7r 1               ; pal_had_fade_not = 1;
+0000E7r 1               ;
+0000E7r 1  A2 00        	ldx     #$00
+0000E9r 1  A9 01        	lda     #$01
+0000EBr 1  8D rr rr     	sta     _pal_had_fade_not
 0000EEr 1               ;
-0000EEr 1               ; frisk_face = 1;
+0000EEr 1               ; if((pad1 & PAD_LEFT)&&(player_x>=0x02)){
 0000EEr 1               ;
-0000EEr 1  A2 00        	ldx     #$00
-0000F0r 1  A9 01        	lda     #$01
-0000F2r 1  8D rr rr     	sta     _frisk_face
-0000F5r 1               ;
-0000F5r 1               ; player_y=player_y-1;
-0000F5r 1               ;
-0000F5r 1  A2 00        	ldx     #$00
-0000F7r 1  AD rr rr     	lda     _player_y
-0000FAr 1  20 rr rr     	jsr     decax1
-0000FDr 1  A2 00        	ldx     #$00
-0000FFr 1  8D rr rr     	sta     _player_y
-000102r 1               ;
-000102r 1               ; else if(pad1 & PAD_DOWN){
-000102r 1               ;
-000102r 1  4C rr rr     	jmp     L000B
-000105r 1  A2 00        L0009:	ldx     #$00
-000107r 1  AD rr rr     	lda     _pad1
-00010Ar 1  A2 00        	ldx     #$00
-00010Cr 1  29 04        	and     #$04
-00010Er 1  86 rr        	stx     tmp1
-000110r 1  05 rr        	ora     tmp1
-000112r 1  D0 03 4C rr  	jeq     L000B
-000116r 1  rr           
-000117r 1               ;
-000117r 1               ; frisk_face = 0;
-000117r 1               ;
-000117r 1  A2 00        	ldx     #$00
-000119r 1  A9 00        	lda     #$00
-00011Br 1  8D rr rr     	sta     _frisk_face
-00011Er 1               ;
-00011Er 1               ; player_y=player_y+1;
-00011Er 1               ;
-00011Er 1  A2 00        	ldx     #$00
-000120r 1  AD rr rr     	lda     _player_y
-000123r 1  20 rr rr     	jsr     incax1
-000126r 1  A2 00        	ldx     #$00
-000128r 1  8D rr rr     	sta     _player_y
-00012Br 1               ;
-00012Br 1               ; if(!(pad1 & PAD_LEFT)&&!(pad1 & PAD_RIGHT)&&!(pad1 & PAD_UP)&&!(pad1 & PAD_DOWN)){
-00012Br 1               ;
-00012Br 1  A2 00        L000B:	ldx     #$00
-00012Dr 1  AD rr rr     	lda     _pad1
-000130r 1  A2 00        	ldx     #$00
-000132r 1  29 02        	and     #$02
-000134r 1  20 rr rr     	jsr     bnegax
-000137r 1  D0 03 4C rr  	jeq     L000D
-00013Br 1  rr           
-00013Cr 1  A2 00        	ldx     #$00
-00013Er 1  AD rr rr     	lda     _pad1
-000141r 1  A2 00        	ldx     #$00
-000143r 1  29 01        	and     #$01
-000145r 1  20 rr rr     	jsr     bnegax
-000148r 1  D0 03 4C rr  	jeq     L000D
-00014Cr 1  rr           
-00014Dr 1  A2 00        	ldx     #$00
-00014Fr 1  AD rr rr     	lda     _pad1
-000152r 1  A2 00        	ldx     #$00
-000154r 1  29 08        	and     #$08
-000156r 1  20 rr rr     	jsr     bnegax
-000159r 1  D0 03 4C rr  	jeq     L000D
-00015Dr 1  rr           
-00015Er 1  A2 00        	ldx     #$00
-000160r 1  AD rr rr     	lda     _pad1
-000163r 1  A2 00        	ldx     #$00
-000165r 1  29 04        	and     #$04
-000167r 1  20 rr rr     	jsr     bnegax
-00016Ar 1  F0 03 4C rr  	jne     L000E
-00016Er 1  rr           
-00016Fr 1  A2 00        L000D:	ldx     #$00
-000171r 1  A9 00        	lda     #$00
-000173r 1  D0 03 4C rr  	jeq     L000F
-000177r 1  rr           
-000178r 1  A2 00        L000E:	ldx     #$00
-00017Ar 1  A9 01        	lda     #$01
-00017Cr 1  D0 03 4C rr  L000F:	jeq     L000C
-000180r 1  rr           
+0000EEr 1  A2 00        L0008:	ldx     #$00
+0000F0r 1  AD rr rr     	lda     _pad1
+0000F3r 1  A2 00        	ldx     #$00
+0000F5r 1  29 02        	and     #$02
+0000F7r 1  86 rr        	stx     tmp1
+0000F9r 1  05 rr        	ora     tmp1
+0000FBr 1  D0 03 4C rr  	jeq     L000A
+0000FFr 1  rr           
+000100r 1  A2 00        	ldx     #$00
+000102r 1  AD rr rr     	lda     _player_x
+000105r 1  C9 02        	cmp     #$02
+000107r 1  A9 00        	lda     #$00
+000109r 1  A2 00        	ldx     #$00
+00010Br 1  2A           	rol     a
+00010Cr 1  F0 03 4C rr  	jne     L000B
+000110r 1  rr           
+000111r 1  A2 00        L000A:	ldx     #$00
+000113r 1  A9 00        	lda     #$00
+000115r 1  D0 03 4C rr  	jeq     L000C
+000119r 1  rr           
+00011Ar 1  A2 00        L000B:	ldx     #$00
+00011Cr 1  A9 01        	lda     #$01
+00011Er 1  D0 03 4C rr  L000C:	jeq     L0009
+000122r 1  rr           
+000123r 1               ;
+000123r 1               ; frisk_face = 2;
+000123r 1               ;
+000123r 1  A2 00        	ldx     #$00
+000125r 1  A9 02        	lda     #$02
+000127r 1  8D rr rr     	sta     _frisk_face
+00012Ar 1               ;
+00012Ar 1               ; player_x=player_x-1;
+00012Ar 1               ;
+00012Ar 1  A2 00        	ldx     #$00
+00012Cr 1  AD rr rr     	lda     _player_x
+00012Fr 1  20 rr rr     	jsr     decax1
+000132r 1  A2 00        	ldx     #$00
+000134r 1  8D rr rr     	sta     _player_x
+000137r 1               ;
+000137r 1               ; else if((pad1 & PAD_RIGHT)&&(player_x<=0xF0)){
+000137r 1               ;
+000137r 1  4C rr rr     	jmp     L000E
+00013Ar 1  A2 00        L0009:	ldx     #$00
+00013Cr 1  AD rr rr     	lda     _pad1
+00013Fr 1  A2 00        	ldx     #$00
+000141r 1  29 01        	and     #$01
+000143r 1  86 rr        	stx     tmp1
+000145r 1  05 rr        	ora     tmp1
+000147r 1  D0 03 4C rr  	jeq     L000F
+00014Br 1  rr           
+00014Cr 1  A2 00        	ldx     #$00
+00014Er 1  AD rr rr     	lda     _player_x
+000151r 1  C9 F1        	cmp     #$F1
+000153r 1  20 rr rr     	jsr     boolult
+000156r 1  F0 03 4C rr  	jne     L0010
+00015Ar 1  rr           
+00015Br 1  A2 00        L000F:	ldx     #$00
+00015Dr 1  A9 00        	lda     #$00
+00015Fr 1  D0 03 4C rr  	jeq     L0011
+000163r 1  rr           
+000164r 1  A2 00        L0010:	ldx     #$00
+000166r 1  A9 01        	lda     #$01
+000168r 1  D0 03 4C rr  L0011:	jeq     L000E
+00016Cr 1  rr           
+00016Dr 1               ;
+00016Dr 1               ; frisk_face = 3;
+00016Dr 1               ;
+00016Dr 1  A2 00        	ldx     #$00
+00016Fr 1  A9 03        	lda     #$03
+000171r 1  8D rr rr     	sta     _frisk_face
+000174r 1               ;
+000174r 1               ; player_x=player_x+1;
+000174r 1               ;
+000174r 1  A2 00        	ldx     #$00
+000176r 1  AD rr rr     	lda     _player_x
+000179r 1  20 rr rr     	jsr     incax1
+00017Cr 1  A2 00        	ldx     #$00
+00017Er 1  8D rr rr     	sta     _player_x
 000181r 1               ;
-000181r 1               ; frisk_frame = 0;
+000181r 1               ; if((pad1 & PAD_UP)&&(player_y>=0x02)){
 000181r 1               ;
-000181r 1  A2 00        	ldx     #$00
-000183r 1  A9 00        	lda     #$00
-000185r 1  8D rr rr     	sta     _frisk_frame
-000188r 1               ;
-000188r 1               ; frisk_frame_wait = 0;
-000188r 1               ;
-000188r 1  A2 00        	ldx     #$00
-00018Ar 1  A9 00        	lda     #$00
-00018Cr 1  8D rr rr     	sta     _frisk_frame_wait
-00018Fr 1               ;
-00018Fr 1               ; else
-00018Fr 1               ;
-00018Fr 1  4C rr rr     	jmp     L0010
-000192r 1               ;
-000192r 1               ; frisk_frame_change();
-000192r 1               ;
-000192r 1  20 rr rr     L000C:	jsr     _frisk_frame_change
-000195r 1               ;
-000195r 1               ; map_frisk_collison=0;
-000195r 1               ;
-000195r 1  A2 00        L0010:	ldx     #$00
-000197r 1  A9 00        	lda     #$00
-000199r 1  8D rr rr     	sta     _map_frisk_collison
-00019Cr 1               ;
-00019Cr 1               ; frisk_map_box.x = player_x;
-00019Cr 1               ;
+000181r 1  A2 00        L000E:	ldx     #$00
+000183r 1  AD rr rr     	lda     _pad1
+000186r 1  A2 00        	ldx     #$00
+000188r 1  29 08        	and     #$08
+00018Ar 1  86 rr        	stx     tmp1
+00018Cr 1  05 rr        	ora     tmp1
+00018Er 1  D0 03 4C rr  	jeq     L0013
+000192r 1  rr           
+000193r 1  A2 00        	ldx     #$00
+000195r 1  AD rr rr     	lda     _player_y
+000198r 1  C9 02        	cmp     #$02
+00019Ar 1  A9 00        	lda     #$00
 00019Cr 1  A2 00        	ldx     #$00
-00019Er 1  AD rr rr     	lda     _player_x
-0001A1r 1  8D rr rr     	sta     _frisk_map_box
-0001A4r 1               ;
-0001A4r 1               ; frisk_map_box.y = player_y+24;
-0001A4r 1               ;
-0001A4r 1  A2 00        	ldx     #$00
-0001A6r 1  AD rr rr     	lda     _player_y
-0001A9r 1  A0 18        	ldy     #$18
-0001ABr 1  20 rr rr     	jsr     incaxy
-0001AEr 1  A2 00        	ldx     #$00
-0001B0r 1  8D rr rr     	sta     _frisk_map_box+1
-0001B3r 1               ;
-0001B3r 1               ; oam_clear();
-0001B3r 1               ;
-0001B3r 1  20 rr rr     	jsr     _oam_clear
+00019Er 1  2A           	rol     a
+00019Fr 1  F0 03 4C rr  	jne     L0014
+0001A3r 1  rr           
+0001A4r 1  A2 00        L0013:	ldx     #$00
+0001A6r 1  A9 00        	lda     #$00
+0001A8r 1  D0 03 4C rr  	jeq     L0015
+0001ACr 1  rr           
+0001ADr 1  A2 00        L0014:	ldx     #$00
+0001AFr 1  A9 01        	lda     #$01
+0001B1r 1  D0 03 4C rr  L0015:	jeq     L0012
+0001B5r 1  rr           
 0001B6r 1               ;
-0001B6r 1               ; oam_meta_spr(player_x, player_y , frisk[frisk_face][frisk_frame]);
+0001B6r 1               ; frisk_face = 1;
 0001B6r 1               ;
-0001B6r 1  AD rr rr     	lda     _player_x
-0001B9r 1  20 rr rr     	jsr     pusha
-0001BCr 1  AD rr rr     	lda     _player_y
-0001BFr 1  20 rr rr     	jsr     pusha
-0001C2r 1  A2 00        	ldx     #$00
-0001C4r 1  AD rr rr     	lda     _frisk_face
-0001C7r 1  20 rr rr     	jsr     aslax3
-0001CAr 1  18           	clc
-0001CBr 1  69 rr        	adc     #<(_frisk)
-0001CDr 1  A8           	tay
-0001CEr 1  8A           	txa
-0001CFr 1  69 rr        	adc     #>(_frisk)
-0001D1r 1  AA           	tax
-0001D2r 1  98           	tya
-0001D3r 1  20 rr rr     	jsr     pushax
-0001D6r 1  A2 00        	ldx     #$00
-0001D8r 1  AD rr rr     	lda     _frisk_frame
-0001DBr 1  20 rr rr     	jsr     aslax1
-0001DEr 1  20 rr rr     	jsr     tosaddax
-0001E1r 1  A0 01        	ldy     #$01
-0001E3r 1  20 rr rr     	jsr     ldaxidx
-0001E6r 1  20 rr rr     	jsr     _oam_meta_spr
-0001E9r 1               ;
-0001E9r 1               ; while(1){
-0001E9r 1               ;
-0001E9r 1  4C rr rr     L0004:	jmp     L0002
-0001ECr 1               ;
-0001ECr 1               ; }
-0001ECr 1               ;
-0001ECr 1  60           	rts
-0001EDr 1               
-0001EDr 1               .endproc
-0001EDr 1               
-0001EDr 1               
+0001B6r 1  A2 00        	ldx     #$00
+0001B8r 1  A9 01        	lda     #$01
+0001BAr 1  8D rr rr     	sta     _frisk_face
+0001BDr 1               ;
+0001BDr 1               ; player_y=player_y-1;
+0001BDr 1               ;
+0001BDr 1  A2 00        	ldx     #$00
+0001BFr 1  AD rr rr     	lda     _player_y
+0001C2r 1  20 rr rr     	jsr     decax1
+0001C5r 1  A2 00        	ldx     #$00
+0001C7r 1  8D rr rr     	sta     _player_y
+0001CAr 1               ;
+0001CAr 1               ; else if((pad1 & PAD_DOWN)&&(player_y<=0xC5)){
+0001CAr 1               ;
+0001CAr 1  4C rr rr     	jmp     L0017
+0001CDr 1  A2 00        L0012:	ldx     #$00
+0001CFr 1  AD rr rr     	lda     _pad1
+0001D2r 1  A2 00        	ldx     #$00
+0001D4r 1  29 04        	and     #$04
+0001D6r 1  86 rr        	stx     tmp1
+0001D8r 1  05 rr        	ora     tmp1
+0001DAr 1  D0 03 4C rr  	jeq     L0018
+0001DEr 1  rr           
+0001DFr 1  A2 00        	ldx     #$00
+0001E1r 1  AD rr rr     	lda     _player_y
+0001E4r 1  C9 C6        	cmp     #$C6
+0001E6r 1  20 rr rr     	jsr     boolult
+0001E9r 1  F0 03 4C rr  	jne     L0019
+0001EDr 1  rr           
+0001EEr 1  A2 00        L0018:	ldx     #$00
+0001F0r 1  A9 00        	lda     #$00
+0001F2r 1  D0 03 4C rr  	jeq     L001A
+0001F6r 1  rr           
+0001F7r 1  A2 00        L0019:	ldx     #$00
+0001F9r 1  A9 01        	lda     #$01
+0001FBr 1  D0 03 4C rr  L001A:	jeq     L0017
+0001FFr 1  rr           
+000200r 1               ;
+000200r 1               ; frisk_face = 0;
+000200r 1               ;
+000200r 1  A2 00        	ldx     #$00
+000202r 1  A9 00        	lda     #$00
+000204r 1  8D rr rr     	sta     _frisk_face
+000207r 1               ;
+000207r 1               ; player_y=player_y+1;
+000207r 1               ;
+000207r 1  A2 00        	ldx     #$00
+000209r 1  AD rr rr     	lda     _player_y
+00020Cr 1  20 rr rr     	jsr     incax1
+00020Fr 1  A2 00        	ldx     #$00
+000211r 1  8D rr rr     	sta     _player_y
+000214r 1               ;
+000214r 1               ; if(!(pad1 & PAD_LEFT)&&!(pad1 & PAD_RIGHT)&&!(pad1 & PAD_UP)&&!(pad1 & PAD_DOWN)){
+000214r 1               ;
+000214r 1  A2 00        L0017:	ldx     #$00
+000216r 1  AD rr rr     	lda     _pad1
+000219r 1  A2 00        	ldx     #$00
+00021Br 1  29 02        	and     #$02
+00021Dr 1  20 rr rr     	jsr     bnegax
+000220r 1  D0 03 4C rr  	jeq     L001C
+000224r 1  rr           
+000225r 1  A2 00        	ldx     #$00
+000227r 1  AD rr rr     	lda     _pad1
+00022Ar 1  A2 00        	ldx     #$00
+00022Cr 1  29 01        	and     #$01
+00022Er 1  20 rr rr     	jsr     bnegax
+000231r 1  D0 03 4C rr  	jeq     L001C
+000235r 1  rr           
+000236r 1  A2 00        	ldx     #$00
+000238r 1  AD rr rr     	lda     _pad1
+00023Br 1  A2 00        	ldx     #$00
+00023Dr 1  29 08        	and     #$08
+00023Fr 1  20 rr rr     	jsr     bnegax
+000242r 1  D0 03 4C rr  	jeq     L001C
+000246r 1  rr           
+000247r 1  A2 00        	ldx     #$00
+000249r 1  AD rr rr     	lda     _pad1
+00024Cr 1  A2 00        	ldx     #$00
+00024Er 1  29 04        	and     #$04
+000250r 1  20 rr rr     	jsr     bnegax
+000253r 1  F0 03 4C rr  	jne     L001D
+000257r 1  rr           
+000258r 1  A2 00        L001C:	ldx     #$00
+00025Ar 1  A9 00        	lda     #$00
+00025Cr 1  D0 03 4C rr  	jeq     L001E
+000260r 1  rr           
+000261r 1  A2 00        L001D:	ldx     #$00
+000263r 1  A9 01        	lda     #$01
+000265r 1  D0 03 4C rr  L001E:	jeq     L001B
+000269r 1  rr           
+00026Ar 1               ;
+00026Ar 1               ; frisk_frame = 0;
+00026Ar 1               ;
+00026Ar 1  A2 00        	ldx     #$00
+00026Cr 1  A9 00        	lda     #$00
+00026Er 1  8D rr rr     	sta     _frisk_frame
+000271r 1               ;
+000271r 1               ; frisk_frame_wait = 0;
+000271r 1               ;
+000271r 1  A2 00        	ldx     #$00
+000273r 1  A9 00        	lda     #$00
+000275r 1  8D rr rr     	sta     _frisk_frame_wait
+000278r 1               ;
+000278r 1               ; else
+000278r 1               ;
+000278r 1  4C rr rr     	jmp     L001F
+00027Br 1               ;
+00027Br 1               ; frisk_frame_change();
+00027Br 1               ;
+00027Br 1  20 rr rr     L001B:	jsr     _frisk_frame_change
+00027Er 1               ;
+00027Er 1               ; map_frisk_collison=0;
+00027Er 1               ;
+00027Er 1  A2 00        L001F:	ldx     #$00
+000280r 1  A9 00        	lda     #$00
+000282r 1  8D rr rr     	sta     _map_frisk_collison
+000285r 1               ;
+000285r 1               ; frisk_map_box.x = player_x;
+000285r 1               ;
+000285r 1  A2 00        	ldx     #$00
+000287r 1  AD rr rr     	lda     _player_x
+00028Ar 1  8D rr rr     	sta     _frisk_map_box
+00028Dr 1               ;
+00028Dr 1               ; frisk_map_box.y = player_y+24;
+00028Dr 1               ;
+00028Dr 1  A2 00        	ldx     #$00
+00028Fr 1  AD rr rr     	lda     _player_y
+000292r 1  A0 18        	ldy     #$18
+000294r 1  20 rr rr     	jsr     incaxy
+000297r 1  A2 00        	ldx     #$00
+000299r 1  8D rr rr     	sta     _frisk_map_box+1
+00029Cr 1               ;
+00029Cr 1               ; oam_clear();
+00029Cr 1               ;
+00029Cr 1  20 rr rr     	jsr     _oam_clear
+00029Fr 1               ;
+00029Fr 1               ; oam_meta_spr(player_x, player_y , frisk[frisk_face][frisk_frame]);
+00029Fr 1               ;
+00029Fr 1  AD rr rr     	lda     _player_x
+0002A2r 1  20 rr rr     	jsr     pusha
+0002A5r 1  AD rr rr     	lda     _player_y
+0002A8r 1  20 rr rr     	jsr     pusha
+0002ABr 1  A2 00        	ldx     #$00
+0002ADr 1  AD rr rr     	lda     _frisk_face
+0002B0r 1  20 rr rr     	jsr     aslax3
+0002B3r 1  18           	clc
+0002B4r 1  69 rr        	adc     #<(_frisk)
+0002B6r 1  A8           	tay
+0002B7r 1  8A           	txa
+0002B8r 1  69 rr        	adc     #>(_frisk)
+0002BAr 1  AA           	tax
+0002BBr 1  98           	tya
+0002BCr 1  20 rr rr     	jsr     pushax
+0002BFr 1  A2 00        	ldx     #$00
+0002C1r 1  AD rr rr     	lda     _frisk_frame
+0002C4r 1  20 rr rr     	jsr     aslax1
+0002C7r 1  20 rr rr     	jsr     tosaddax
+0002CAr 1  A0 01        	ldy     #$01
+0002CCr 1  20 rr rr     	jsr     ldaxidx
+0002CFr 1  20 rr rr     	jsr     _oam_meta_spr
+0002D2r 1               ;
+0002D2r 1               ; oam_meta_spr(120, 100 , flowey_talk[0]);
+0002D2r 1               ;
+0002D2r 1  A9 78        	lda     #$78
+0002D4r 1  20 rr rr     	jsr     pusha
+0002D7r 1  A9 64        	lda     #$64
+0002D9r 1  20 rr rr     	jsr     pusha
+0002DCr 1  AD rr rr     	lda     _flowey_talk
+0002DFr 1  AE rr rr     	ldx     _flowey_talk+1
+0002E2r 1  20 rr rr     	jsr     _oam_meta_spr
+0002E5r 1               ;
+0002E5r 1               ; while(1){
+0002E5r 1               ;
+0002E5r 1  4C rr rr     L0007:	jmp     L0002
+0002E8r 1               ;
+0002E8r 1               ; }
+0002E8r 1               ;
+0002E8r 1  60           	rts
+0002E9r 1               
+0002E9r 1               .endproc
+0002E9r 1               
+0002E9r 1               
