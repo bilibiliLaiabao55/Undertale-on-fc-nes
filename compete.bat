@@ -13,6 +13,6 @@ ld65 -C elsefiles/NOT_IMPORTANT/nes.cfg lib\crt0.o elsefiles/NOT_IMPORTANT/UNDER
 
 @REM 运行
 CD EXPORT
-fceux UNDERTALE.NES
+UNDERTALE.NES
 
 pause
