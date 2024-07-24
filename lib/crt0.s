@@ -385,13 +385,13 @@ music_data:
 	.include "music.s"
 
 sounds_data:
-	;.include "sounds.s"
+	.include "sounds.s"
 
 
 	
 	
 ;.segment "SAMPLES"
-;	.incbin "MUSIC/BassDrum.dmc"
+;	.incbin "snd_txttor.wav"
 
 
 
@@ -404,8 +404,8 @@ sounds_data:
 
 .segment "CHARS"
 
-	.incbin "CHR_ROM.chr"
-	;.incbin "Gears.chr"
+	.incbin "CHR_ROM_bank1.chr"
+	.incbin "CHR_ROM_bank2.chr"
 ; the CHARS segment is much bigger, and I could have 
 ; incbin-ed many more chr files
 	

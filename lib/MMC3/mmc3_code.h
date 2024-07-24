@@ -65,8 +65,8 @@ void __fastcall__ set_chr_mode_5(unsigned char chr_id);
 
 
 
-#define MIRROR_VERTICAL 0
-#define MIRROR_HORIZONTAL 1
+#define MIRROR_VERTICAL 0 //垂直
+#define MIRROR_HORIZONTAL 1 //水平
 
 // Set the current mirroring mode. Your options are 
 // MIRROR_HORIZONTAL, and MIRROR_VERTICAL.
