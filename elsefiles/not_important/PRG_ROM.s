@@ -16,13 +16,56 @@
 	.import		_ppu_off
 	.import		_ppu_on_all
 	.import		_oam_clear
+	.import		_oam_spr
 	.import		_oam_meta_spr
 	.import		_music_play
 	.import		_music_stop
+	.import		_sfx_play
 	.import		_pad_poll
+	.import		_bank_bg
+	.import		_vram_adr
+	.import		_vram_put
+	.import		_vram_fill
+	.import		_vram_unrle
+	.import		_set_vram_buffer
 	.import		_pal_fade_to
+	.import		_set_scroll_x
+	.import		_set_scroll_y
 	.export		_bankLevel
 	.export		_bankBuffer
+	.export		_banked_call
+	.export		_bank_push
+	.export		_bank_pop
+	.import		_set_prg_8000
+	.import		_get_prg_8000
+	.import		_disable_irq
+	.export		_player_x
+	.export		_player_y
+	.export		_pad1
+	.export		_frisk_frame
+	.export		_frisk_frame_wait
+	.export		_frisk_face
+	.export		_map_frisk_collison
+	.export		_state
+	.export		_steps
+	.export		_timer0
+	.export		_timer1
+	.export		_timer2
+	.export		_scroll_x
+	.export		_scroll_y
+	.export		_pal_had_fade_not
+	.export		_temp0
+	.export		_temp1
+	.export		_battle_choosen
+	.export		_keys_pressed
+	.export		_wram_array
+	.export		_frisk_map_box
+	.export		_LEFT_COLLISON
+	.export		_RIGHT_COLLISON
+	.export		_UP_COLLISON
+	.export		_DOWN_COLLISON
+	.export		_palette
+	.export		_save
 	.export		_frisk_down_0_data
 	.export		_frisk_down_1_data
 	.export		_frisk_down_2_data
@@ -44,25 +87,20 @@
 	.export		_flowey_talk_0_data
 	.export		_flowey_talk_1_data
 	.export		_flowey_talk
-	.export		_player_x
-	.export		_player_y
-	.export		_pad1
-	.export		_frisk_frame
-	.export		_frisk_frame_wait
-	.export		_frisk_face
-	.export		_map_frisk_collison
-	.export		_state
-	.export		_tempL
-	.export		_tempR
-	.export		_tempT
-	.export		_tempD
-	.export		_pal_had_fade_not
-	.export		_frisk_map_box
-	.export		_LEFT_COLLISON
-	.export		_RIGHT_COLLISON
-	.export		_UP_COLLISON
-	.export		_DOWN_COLLISON
-	.export		_palette
+	.export		_toriel_0_data
+	.export		_toriel_1_data
+	.export		_toriel_2_data
+	.export		_toriel
+	.export		_set_frisk
+	.export		_set_die_soul
+	.export		_set_soul
+	.export		_title
+	.export		_clear_background
+	.export		_set_fight_bg
+	.export		_set_title
+	.export		_check_set_soul
+	.export		_init_fight
+	.export		_frames_funcion
 	.export		_frisk_frame_change
 	.export		_main
 
@@ -80,11 +118,72 @@ _frisk_face:
 	.byte	$01
 _map_frisk_collison:
 	.byte	$00
+_timer0:
+	.byte	$00
+_timer1:
+	.byte	$00
+_timer2:
+	.byte	$00
+_scroll_x:
+	.byte	$00
+_scroll_y:
+	.byte	$00
 _pal_had_fade_not:
+	.byte	$00
+_temp0:
+	.byte	$00
+_temp1:
+	.byte	$00
+_battle_choosen:
+	.byte	$00
+_keys_pressed:
 	.byte	$00
 
 .segment	"RODATA"
 
+.segment	"STARTUP"
+_LEFT_COLLISON:
+	.byte	$01
+_RIGHT_COLLISON:
+	.byte	$02
+_UP_COLLISON:
+	.byte	$04
+_DOWN_COLLISON:
+	.byte	$08
+_palette:
+	.byte	$0F
+	.byte	$1A
+	.byte	$30
+	.byte	$30
+	.byte	$0F
+	.byte	$10
+	.byte	$0F
+	.byte	$27
+	.byte	$0F
+	.byte	$06
+	.byte	$27
+	.byte	$2C
+	.byte	$0F
+	.byte	$06
+	.byte	$27
+	.byte	$2C
+	.byte	$0F
+	.byte	$06
+	.byte	$27
+	.byte	$2C
+	.byte	$0F
+	.byte	$15
+	.byte	$27
+	.byte	$2A
+	.byte	$0F
+	.byte	$10
+	.byte	$0F
+	.byte	$27
+	.byte	$0F
+	.byte	$06
+	.byte	$27
+	.byte	$2C
+.segment	"BANK0"
 _frisk_down_0_data:
 	.byte	$00
 	.byte	$00
@@ -602,47 +701,519 @@ _flowey_talk_1_data:
 _flowey_talk:
 	.addr	_flowey_talk_0_data
 	.addr	_flowey_talk_1_data
-_LEFT_COLLISON:
-	.byte	$01
-_RIGHT_COLLISON:
-	.byte	$02
-_UP_COLLISON:
-	.byte	$04
-_DOWN_COLLISON:
+_toriel_0_data:
 	.byte	$08
-_palette:
-	.byte	$14
-	.byte	$10
-	.byte	$0F
-	.byte	$30
-	.byte	$14
-	.byte	$10
-	.byte	$0F
-	.byte	$27
-	.byte	$14
-	.byte	$06
-	.byte	$27
-	.byte	$2C
-	.byte	$14
-	.byte	$06
-	.byte	$27
-	.byte	$2C
-	.byte	$14
-	.byte	$06
-	.byte	$27
-	.byte	$2C
-	.byte	$14
-	.byte	$27
-	.byte	$0F
+	.byte	$00
+	.byte	$29
+	.byte	$43
+	.byte	$08
+	.byte	$08
 	.byte	$2A
-	.byte	$14
+	.byte	$43
+	.byte	$08
 	.byte	$10
-	.byte	$0F
-	.byte	$27
-	.byte	$14
-	.byte	$06
-	.byte	$27
+	.byte	$2B
+	.byte	$43
+	.byte	$08
+	.byte	$18
 	.byte	$2C
+	.byte	$43
+	.byte	$08
+	.byte	$20
+	.byte	$2D
+	.byte	$43
+	.byte	$00
+	.byte	$00
+	.byte	$29
+	.byte	$03
+	.byte	$00
+	.byte	$08
+	.byte	$2A
+	.byte	$03
+	.byte	$00
+	.byte	$10
+	.byte	$2B
+	.byte	$03
+	.byte	$00
+	.byte	$18
+	.byte	$2C
+	.byte	$03
+	.byte	$00
+	.byte	$20
+	.byte	$2D
+	.byte	$03
+	.byte	$80
+_toriel_1_data:
+	.byte	$08
+	.byte	$01
+	.byte	$29
+	.byte	$43
+	.byte	$08
+	.byte	$09
+	.byte	$2A
+	.byte	$43
+	.byte	$08
+	.byte	$11
+	.byte	$2B
+	.byte	$43
+	.byte	$08
+	.byte	$19
+	.byte	$2C
+	.byte	$43
+	.byte	$08
+	.byte	$21
+	.byte	$2F
+	.byte	$03
+	.byte	$00
+	.byte	$01
+	.byte	$29
+	.byte	$03
+	.byte	$00
+	.byte	$09
+	.byte	$2A
+	.byte	$03
+	.byte	$00
+	.byte	$11
+	.byte	$2B
+	.byte	$03
+	.byte	$00
+	.byte	$19
+	.byte	$2C
+	.byte	$03
+	.byte	$00
+	.byte	$21
+	.byte	$2E
+	.byte	$03
+	.byte	$80
+_toriel_2_data:
+	.byte	$08
+	.byte	$01
+	.byte	$29
+	.byte	$43
+	.byte	$08
+	.byte	$09
+	.byte	$2A
+	.byte	$43
+	.byte	$08
+	.byte	$11
+	.byte	$2B
+	.byte	$43
+	.byte	$08
+	.byte	$19
+	.byte	$2C
+	.byte	$43
+	.byte	$08
+	.byte	$21
+	.byte	$2E
+	.byte	$43
+	.byte	$00
+	.byte	$01
+	.byte	$29
+	.byte	$03
+	.byte	$00
+	.byte	$09
+	.byte	$2A
+	.byte	$03
+	.byte	$00
+	.byte	$11
+	.byte	$2B
+	.byte	$03
+	.byte	$00
+	.byte	$19
+	.byte	$2C
+	.byte	$03
+	.byte	$00
+	.byte	$21
+	.byte	$2F
+	.byte	$43
+	.byte	$80
+_toriel:
+	.addr	_toriel_0_data
+	.addr	_toriel_1_data
+	.addr	_toriel_0_data
+	.addr	_toriel_2_data
+.segment	"BANK1"
+_title:
+	.byte	$01
+	.byte	$00
+	.byte	$01
+	.byte	$81
+	.byte	$03
+	.byte	$03
+	.byte	$00
+	.byte	$03
+	.byte	$03
+	.byte	$00
+	.byte	$03
+	.byte	$03
+	.byte	$00
+	.byte	$00
+	.byte	$03
+	.byte	$03
+	.byte	$00
+	.byte	$03
+	.byte	$01
+	.byte	$03
+	.byte	$00
+	.byte	$00
+	.byte	$03
+	.byte	$01
+	.byte	$03
+	.byte	$00
+	.byte	$03
+	.byte	$01
+	.byte	$02
+	.byte	$00
+	.byte	$01
+	.byte	$04
+	.byte	$03
+	.byte	$03
+	.byte	$00
+	.byte	$03
+	.byte	$03
+	.byte	$00
+	.byte	$03
+	.byte	$01
+	.byte	$02
+	.byte	$00
+	.byte	$03
+	.byte	$03
+	.byte	$00
+	.byte	$03
+	.byte	$01
+	.byte	$04
+	.byte	$00
+	.byte	$03
+	.byte	$03
+	.byte	$00
+	.byte	$01
+	.byte	$02
+	.byte	$03
+	.byte	$00
+	.byte	$03
+	.byte	$00
+	.byte	$01
+	.byte	$04
+	.byte	$03
+	.byte	$03
+	.byte	$00
+	.byte	$03
+	.byte	$03
+	.byte	$00
+	.byte	$03
+	.byte	$01
+	.byte	$05
+	.byte	$00
+	.byte	$03
+	.byte	$03
+	.byte	$00
+	.byte	$03
+	.byte	$03
+	.byte	$00
+	.byte	$03
+	.byte	$01
+	.byte	$03
+	.byte	$00
+	.byte	$03
+	.byte	$03
+	.byte	$00
+	.byte	$01
+	.byte	$05
+	.byte	$03
+	.byte	$03
+	.byte	$00
+	.byte	$03
+	.byte	$03
+	.byte	$00
+	.byte	$03
+	.byte	$03
+	.byte	$00
+	.byte	$03
+	.byte	$01
+	.byte	$02
+	.byte	$00
+	.byte	$03
+	.byte	$03
+	.byte	$00
+	.byte	$03
+	.byte	$03
+	.byte	$00
+	.byte	$03
+	.byte	$03
+	.byte	$00
+	.byte	$01
+	.byte	$02
+	.byte	$03
+	.byte	$00
+	.byte	$03
+	.byte	$00
+	.byte	$01
+	.byte	$04
+	.byte	$03
+	.byte	$01
+	.byte	$04
+	.byte	$00
+	.byte	$03
+	.byte	$03
+	.byte	$00
+	.byte	$00
+	.byte	$03
+	.byte	$03
+	.byte	$00
+	.byte	$03
+	.byte	$01
+	.byte	$04
+	.byte	$00
+	.byte	$03
+	.byte	$03
+	.byte	$00
+	.byte	$01
+	.byte	$02
+	.byte	$03
+	.byte	$00
+	.byte	$03
+	.byte	$00
+	.byte	$01
+	.byte	$04
+	.byte	$03
+	.byte	$01
+	.byte	$04
+	.byte	$00
+	.byte	$03
+	.byte	$03
+	.byte	$00
+	.byte	$00
+	.byte	$03
+	.byte	$03
+	.byte	$00
+	.byte	$03
+	.byte	$01
+	.byte	$03
+	.byte	$00
+	.byte	$00
+	.byte	$03
+	.byte	$01
+	.byte	$03
+	.byte	$00
+	.byte	$03
+	.byte	$00
+	.byte	$03
+	.byte	$00
+	.byte	$01
+	.byte	$44
+	.byte	$03
+	.byte	$01
+	.byte	$05
+	.byte	$00
+	.byte	$03
+	.byte	$01
+	.byte	$04
+	.byte	$00
+	.byte	$03
+	.byte	$03
+	.byte	$00
+	.byte	$01
+	.byte	$02
+	.byte	$03
+	.byte	$01
+	.byte	$03
+	.byte	$00
+	.byte	$01
+	.byte	$09
+	.byte	$03
+	.byte	$01
+	.byte	$05
+	.byte	$00
+	.byte	$03
+	.byte	$01
+	.byte	$04
+	.byte	$00
+	.byte	$03
+	.byte	$03
+	.byte	$00
+	.byte	$01
+	.byte	$02
+	.byte	$03
+	.byte	$01
+	.byte	$03
+	.byte	$00
+	.byte	$01
+	.byte	$0B
+	.byte	$03
+	.byte	$03
+	.byte	$00
+	.byte	$01
+	.byte	$02
+	.byte	$03
+	.byte	$03
+	.byte	$00
+	.byte	$03
+	.byte	$03
+	.byte	$00
+	.byte	$03
+	.byte	$03
+	.byte	$00
+	.byte	$01
+	.byte	$02
+	.byte	$03
+	.byte	$03
+	.byte	$00
+	.byte	$01
+	.byte	$0D
+	.byte	$03
+	.byte	$03
+	.byte	$00
+	.byte	$01
+	.byte	$02
+	.byte	$03
+	.byte	$01
+	.byte	$04
+	.byte	$00
+	.byte	$03
+	.byte	$03
+	.byte	$00
+	.byte	$01
+	.byte	$02
+	.byte	$03
+	.byte	$01
+	.byte	$03
+	.byte	$00
+	.byte	$01
+	.byte	$0B
+	.byte	$03
+	.byte	$03
+	.byte	$00
+	.byte	$01
+	.byte	$02
+	.byte	$03
+	.byte	$03
+	.byte	$00
+	.byte	$03
+	.byte	$03
+	.byte	$00
+	.byte	$03
+	.byte	$03
+	.byte	$00
+	.byte	$01
+	.byte	$02
+	.byte	$03
+	.byte	$03
+	.byte	$00
+	.byte	$01
+	.byte	$0D
+	.byte	$03
+	.byte	$03
+	.byte	$00
+	.byte	$01
+	.byte	$02
+	.byte	$03
+	.byte	$03
+	.byte	$00
+	.byte	$03
+	.byte	$03
+	.byte	$00
+	.byte	$03
+	.byte	$01
+	.byte	$03
+	.byte	$00
+	.byte	$03
+	.byte	$01
+	.byte	$03
+	.byte	$00
+	.byte	$01
+	.byte	$0B
+	.byte	$03
+	.byte	$03
+	.byte	$00
+	.byte	$01
+	.byte	$02
+	.byte	$03
+	.byte	$03
+	.byte	$00
+	.byte	$03
+	.byte	$03
+	.byte	$00
+	.byte	$03
+	.byte	$01
+	.byte	$03
+	.byte	$00
+	.byte	$03
+	.byte	$01
+	.byte	$03
+	.byte	$00
+	.byte	$01
+	.byte	$6E
+	.byte	$20
+	.byte	$1E
+	.byte	$20
+	.byte	$22
+	.byte	$00
+	.byte	$00
+	.byte	$0F
+	.byte	$04
+	.byte	$0C
+	.byte	$04
+	.byte	$05
+	.byte	$04
+	.byte	$12
+	.byte	$00
+	.byte	$05
+	.byte	$0C
+	.byte	$0F
+	.byte	$0C
+	.byte	$05
+	.byte	$0C
+	.byte	$0F
+	.byte	$0C
+	.byte	$00
+	.byte	$01
+	.byte	$09
+	.byte	$20
+	.byte	$1E
+	.byte	$1F
+	.byte	$23
+	.byte	$00
+	.byte	$00
+	.byte	$17
+	.byte	$12
+	.byte	$05
+	.byte	$1C
+	.byte	$00
+	.byte	$09
+	.byte	$12
+	.byte	$1B
+	.byte	$00
+	.byte	$01
+	.byte	$51
+	.byte	$13
+	.byte	$15
+	.byte	$08
+	.byte	$16
+	.byte	$16
+	.byte	$00
+	.byte	$16
+	.byte	$17
+	.byte	$04
+	.byte	$15
+	.byte	$17
+	.byte	$00
+	.byte	$17
+	.byte	$12
+	.byte	$00
+	.byte	$16
+	.byte	$17
+	.byte	$04
+	.byte	$15
+	.byte	$17
+	.byte	$00
+	.byte	$01
+	.byte	$63
+	.byte	$00
+	.byte	$01
+	.byte	$00
+.segment	"BANK2"
+.segment	"BANK3"
+.segment	"CODE"
 
 .segment	"BSS"
 
@@ -650,20 +1221,1164 @@ _bankLevel:
 	.res	1,$00
 _bankBuffer:
 	.res	10,$00
+.segment	"ZEROPAGE"
 _pad1:
 	.res	1,$00
 _state:
 	.res	1,$00
-_tempL:
+_steps:
 	.res	1,$00
-_tempR:
-	.res	1,$00
-_tempT:
-	.res	1,$00
-_tempD:
-	.res	1,$00
+.segment	"XRAM"
+_wram_array:
+	.res	8192,$00
+.segment	"BSS"
 _frisk_map_box:
 	.res	4,$00
+
+; ---------------------------------------------------------------
+; void __near__ banked_call (unsigned char bankId, void (*method)(void))
+; ---------------------------------------------------------------
+
+.segment	"STARTUP"
+
+.proc	_banked_call: near
+
+.segment	"STARTUP"
+
+;
+; void banked_call(unsigned char bankId, void (*method)(void)) {
+;
+	jsr     pushax
+;
+; bank_push(bankId);
+;
+	ldy     #$02
+	lda     (sp),y
+	jsr     _bank_push
+;
+; (*method)();
+;
+	ldy     #$01
+	jsr     ldaxysp
+	jsr     callax
+;
+; bank_pop();
+;
+	jsr     _bank_pop
+;
+; }
+;
+	jsr     incsp3
+	rts
+
+.endproc
+
+; ---------------------------------------------------------------
+; void __near__ bank_push (unsigned char bankId)
+; ---------------------------------------------------------------
+
+.segment	"STARTUP"
+
+.proc	_bank_push: near
+
+.segment	"STARTUP"
+
+;
+; void bank_push(unsigned char bankId) {
+;
+	jsr     pusha
+;
+; bankBuffer[bankLevel] = get_prg_8000();
+;
+	lda     #<(_bankBuffer)
+	ldx     #>(_bankBuffer)
+	clc
+	adc     _bankLevel
+	bcc     L0002
+	inx
+L0002:	jsr     pushax
+	jsr     _get_prg_8000
+	ldy     #$00
+	jsr     staspidx
+;
+; ++bankLevel;
+;
+	ldx     #$00
+	inc     _bankLevel
+	lda     _bankLevel
+;
+; set_prg_8000(bankId);
+;
+	ldy     #$00
+	lda     (sp),y
+	jsr     _set_prg_8000
+;
+; }
+;
+	jsr     incsp1
+	rts
+
+.endproc
+
+; ---------------------------------------------------------------
+; void __near__ bank_pop (void)
+; ---------------------------------------------------------------
+
+.segment	"STARTUP"
+
+.proc	_bank_pop: near
+
+.segment	"STARTUP"
+
+;
+; if (bankLevel != 0) {
+;
+	ldx     #$00
+	lda     _bankLevel
+	cmp     #$00
+	jsr     boolne
+	jeq     L0002
+;
+; --bankLevel;
+;
+	ldx     #$00
+	dec     _bankLevel
+	lda     _bankLevel
+;
+; set_prg_8000(bankBuffer[bankLevel]);
+;
+	lda     #<(_bankBuffer)
+	ldx     #>(_bankBuffer)
+	clc
+	adc     _bankLevel
+	bcc     L0003
+	inx
+L0003:	ldy     #$00
+	jsr     ldauidx
+	jsr     _set_prg_8000
+;
+; }
+;
+L0002:	rts
+
+.endproc
+
+; ---------------------------------------------------------------
+; void __near__ save (void)
+; ---------------------------------------------------------------
+
+.segment	"STARTUP"
+
+.proc	_save: near
+
+.segment	"STARTUP"
+
+;
+; wram_array[0]=0;
+;
+	ldx     #$00
+	lda     #$00
+	sta     _wram_array
+;
+; wram_array[1]=0;
+;
+	ldx     #$00
+	lda     #$00
+	sta     _wram_array+1
+;
+; wram_array[2]=0;
+;
+	ldx     #$00
+	lda     #$00
+	sta     _wram_array+2
+;
+; wram_array[3]=0;
+;
+	ldx     #$00
+	lda     #$00
+	sta     _wram_array+3
+;
+; wram_array[4]=0;
+;
+	ldx     #$00
+	lda     #$00
+	sta     _wram_array+4
+;
+; wram_array[5]=0;
+;
+	ldx     #$00
+	lda     #$00
+	sta     _wram_array+5
+;
+; wram_array[6]=0;
+;
+	ldx     #$00
+	lda     #$00
+	sta     _wram_array+6
+;
+; wram_array[7]=0;
+;
+	ldx     #$00
+	lda     #$00
+	sta     _wram_array+7
+;
+; wram_array[8]=0;
+;
+	ldx     #$00
+	lda     #$00
+	sta     _wram_array+8
+;
+; }
+;
+	rts
+
+.endproc
+
+; ---------------------------------------------------------------
+; void __near__ set_frisk (void)
+; ---------------------------------------------------------------
+
+.segment	"BANK0"
+
+.proc	_set_frisk: near
+
+.segment	"BANK0"
+
+;
+; oam_meta_spr(player_x, player_y , frisk[frisk_face][frisk_frame]);
+;
+	lda     _player_x
+	jsr     pusha
+	lda     _player_y
+	jsr     pusha
+	ldx     #$00
+	lda     _frisk_face
+	jsr     aslax3
+	clc
+	adc     #<(_frisk)
+	tay
+	txa
+	adc     #>(_frisk)
+	tax
+	tya
+	jsr     pushax
+	ldx     #$00
+	lda     _frisk_frame
+	jsr     aslax1
+	jsr     tosaddax
+	ldy     #$01
+	jsr     ldaxidx
+	jsr     _oam_meta_spr
+;
+; }
+;
+	rts
+
+.endproc
+
+; ---------------------------------------------------------------
+; void __near__ set_die_soul (void)
+; ---------------------------------------------------------------
+
+.segment	"BANK0"
+
+.proc	_set_die_soul: near
+
+.segment	"BANK0"
+
+;
+; oam_spr(player_x, player_y+8 ,0x26,1);
+;
+	lda     _player_x
+	jsr     pusha
+	ldx     #$00
+	lda     _player_y
+	jsr     incax8
+	ldx     #$00
+	jsr     pusha
+	lda     #$26
+	jsr     pusha
+	lda     #$01
+	jsr     _oam_spr
+;
+; oam_spr(player_x+8, player_y+8 ,0x27,1);
+;
+	ldx     #$00
+	lda     _player_x
+	jsr     incax8
+	ldx     #$00
+	jsr     pusha
+	ldx     #$00
+	lda     _player_y
+	jsr     incax8
+	ldx     #$00
+	jsr     pusha
+	lda     #$27
+	jsr     pusha
+	lda     #$01
+	jsr     _oam_spr
+;
+; }
+;
+	rts
+
+.endproc
+
+; ---------------------------------------------------------------
+; void __near__ set_soul (void)
+; ---------------------------------------------------------------
+
+.segment	"BANK0"
+
+.proc	_set_soul: near
+
+.segment	"BANK0"
+
+;
+; oam_spr(player_x,player_y,0x25, 1);
+;
+	lda     _player_x
+	jsr     pusha
+	lda     _player_y
+	jsr     pusha
+	lda     #$25
+	jsr     pusha
+	lda     #$01
+	jsr     _oam_spr
+;
+; }
+;
+	rts
+
+.endproc
+
+; ---------------------------------------------------------------
+; void __near__ clear_background (void)
+; ---------------------------------------------------------------
+
+.segment	"BANK1"
+
+.proc	_clear_background: near
+
+.segment	"BANK1"
+
+;
+; ppu_off();
+;
+	jsr     _ppu_off
+;
+; vram_adr(NAMETABLE_A);
+;
+	ldx     #$20
+	lda     #$00
+	jsr     _vram_adr
+;
+; vram_fill(0x00,960);
+;
+	lda     #$00
+	jsr     pusha
+	ldx     #$03
+	lda     #$C0
+	jsr     _vram_fill
+;
+; ppu_on_all();
+;
+	jsr     _ppu_on_all
+;
+; }
+;
+	rts
+
+.endproc
+
+; ---------------------------------------------------------------
+; void __near__ set_fight_bg (void)
+; ---------------------------------------------------------------
+
+.segment	"BANK1"
+
+.proc	_set_fight_bg: near
+
+.segment	"BANK1"
+
+;
+; ppu_off();
+;
+	jsr     _ppu_off
+;
+; vram_adr(NAMETABLE_A);
+;
+	ldx     #$20
+	lda     #$00
+	jsr     _vram_adr
+;
+; for(temp1=0;temp1<9;temp1++){
+;
+	ldx     #$00
+	lda     #$00
+	sta     _temp1
+L0002:	ldx     #$00
+	lda     _temp1
+	cmp     #$09
+	jsr     boolult
+	jne     L0005
+	jmp     L0003
+;
+; for(temp0=0;temp0<16;temp0++){
+;
+L0005:	ldx     #$00
+	lda     #$00
+	sta     _temp0
+L0006:	ldx     #$00
+	lda     _temp0
+	cmp     #$10
+	jsr     boolult
+	jne     L0009
+	jmp     L0007
+;
+; vram_put(0x5E);
+;
+L0009:	lda     #$5E
+	jsr     _vram_put
+;
+; vram_put(0x67);
+;
+	lda     #$67
+	jsr     _vram_put
+;
+; for(temp0=0;temp0<16;temp0++){
+;
+	ldx     #$00
+	lda     _temp0
+	inc     _temp0
+	jmp     L0006
+;
+; for(temp0=0;temp0<16;temp0++){
+;
+L0007:	ldx     #$00
+	lda     #$00
+	sta     _temp0
+L000A:	ldx     #$00
+	lda     _temp0
+	cmp     #$10
+	jsr     boolult
+	jne     L000D
+	jmp     L0004
+;
+; vram_put(0x68);
+;
+L000D:	lda     #$68
+	jsr     _vram_put
+;
+; vram_put(0x69);
+;
+	lda     #$69
+	jsr     _vram_put
+;
+; for(temp0=0;temp0<16;temp0++){
+;
+	ldx     #$00
+	lda     _temp0
+	inc     _temp0
+	jmp     L000A
+;
+; for(temp1=0;temp1<9;temp1++){
+;
+L0004:	ldx     #$00
+	lda     _temp1
+	inc     _temp1
+	jmp     L0002
+;
+; vram_put(0x5F);
+;
+L0003:	lda     #$5F
+	jsr     _vram_put
+;
+; vram_fill(0x60, 30);
+;
+	lda     #$60
+	jsr     pusha
+	ldx     #$00
+	lda     #$1E
+	jsr     _vram_fill
+;
+; vram_put(0x61);
+;
+	lda     #$61
+	jsr     _vram_put
+;
+; for(temp0=0;temp0<6;temp0++){
+;
+	ldx     #$00
+	lda     #$00
+	sta     _temp0
+L000E:	ldx     #$00
+	lda     _temp0
+	cmp     #$06
+	jsr     boolult
+	jne     L0011
+	jmp     L000F
+;
+; vram_put(0x66);
+;
+L0011:	lda     #$66
+	jsr     _vram_put
+;
+; vram_fill(0x00, 30);
+;
+	lda     #$00
+	jsr     pusha
+	ldx     #$00
+	lda     #$1E
+	jsr     _vram_fill
+;
+; vram_put(0x62);
+;
+	lda     #$62
+	jsr     _vram_put
+;
+; for(temp0=0;temp0<6;temp0++){
+;
+	ldx     #$00
+	lda     _temp0
+	inc     _temp0
+	jmp     L000E
+;
+; vram_put(0x64);
+;
+L000F:	lda     #$64
+	jsr     _vram_put
+;
+; vram_fill(0x65, 30);
+;
+	lda     #$65
+	jsr     pusha
+	ldx     #$00
+	lda     #$1E
+	jsr     _vram_fill
+;
+; vram_put(0x63);
+;
+	lda     #$63
+	jsr     _vram_put
+;
+; vram_fill(0x00, 35);
+;
+	lda     #$00
+	jsr     pusha
+	ldx     #$00
+	lda     #$23
+	jsr     _vram_fill
+;
+; vram_put(0x6A);
+;
+	lda     #$6A
+	jsr     _vram_put
+;
+; vram_put(0x6B);
+;
+	lda     #$6B
+	jsr     _vram_put
+;
+; vram_put(0x6C);
+;
+	lda     #$6C
+	jsr     _vram_put
+;
+; vram_put(0x6D);
+;
+	lda     #$6D
+	jsr     _vram_put
+;
+; vram_put(0x6E);
+;
+	lda     #$6E
+	jsr     _vram_put
+;
+; vram_fill(0x00, 2);
+;
+	lda     #$00
+	jsr     pusha
+	ldx     #$00
+	lda     #$02
+	jsr     _vram_fill
+;
+; vram_put(0x74);
+;
+	lda     #$74
+	jsr     _vram_put
+;
+; vram_put(0x75);
+;
+	lda     #$75
+	jsr     _vram_put
+;
+; vram_put(0x76);
+;
+	lda     #$76
+	jsr     _vram_put
+;
+; vram_put(0x77);
+;
+	lda     #$77
+	jsr     _vram_put
+;
+; vram_put(0x78);
+;
+	lda     #$78
+	jsr     _vram_put
+;
+; vram_fill(0x00, 2);
+;
+	lda     #$00
+	jsr     pusha
+	ldx     #$00
+	lda     #$02
+	jsr     _vram_fill
+;
+; vram_put(0x7E);
+;
+	lda     #$7E
+	jsr     _vram_put
+;
+; vram_put(0x7F);
+;
+	lda     #$7F
+	jsr     _vram_put
+;
+; vram_put(0x80);
+;
+	lda     #$80
+	jsr     _vram_put
+;
+; vram_put(0x81);
+;
+	lda     #$81
+	jsr     _vram_put
+;
+; vram_put(0x82);
+;
+	lda     #$82
+	jsr     _vram_put
+;
+; vram_fill(0x00, 2);
+;
+	lda     #$00
+	jsr     pusha
+	ldx     #$00
+	lda     #$02
+	jsr     _vram_fill
+;
+; vram_put(0x88);
+;
+	lda     #$88
+	jsr     _vram_put
+;
+; vram_put(0x89);
+;
+	lda     #$89
+	jsr     _vram_put
+;
+; vram_put(0x8A);
+;
+	lda     #$8A
+	jsr     _vram_put
+;
+; vram_put(0x8B);
+;
+	lda     #$8B
+	jsr     _vram_put
+;
+; vram_put(0x8C);
+;
+	lda     #$8C
+	jsr     _vram_put
+;
+; vram_fill(0x00, 6);
+;
+	lda     #$00
+	jsr     pusha
+	ldx     #$00
+	lda     #$06
+	jsr     _vram_fill
+;
+; vram_put(0x6F);
+;
+	lda     #$6F
+	jsr     _vram_put
+;
+; vram_put(0x70);
+;
+	lda     #$70
+	jsr     _vram_put
+;
+; vram_put(0x71);
+;
+	lda     #$71
+	jsr     _vram_put
+;
+; vram_put(0x72);
+;
+	lda     #$72
+	jsr     _vram_put
+;
+; vram_put(0x73);
+;
+	lda     #$73
+	jsr     _vram_put
+;
+; vram_fill(0x00, 2);
+;
+	lda     #$00
+	jsr     pusha
+	ldx     #$00
+	lda     #$02
+	jsr     _vram_fill
+;
+; vram_put(0x79);
+;
+	lda     #$79
+	jsr     _vram_put
+;
+; vram_put(0x7A);
+;
+	lda     #$7A
+	jsr     _vram_put
+;
+; vram_put(0x7B);
+;
+	lda     #$7B
+	jsr     _vram_put
+;
+; vram_put(0x7C);
+;
+	lda     #$7C
+	jsr     _vram_put
+;
+; vram_put(0x7D);
+;
+	lda     #$7D
+	jsr     _vram_put
+;
+; vram_fill(0x00, 2);
+;
+	lda     #$00
+	jsr     pusha
+	ldx     #$00
+	lda     #$02
+	jsr     _vram_fill
+;
+; vram_put(0x83);
+;
+	lda     #$83
+	jsr     _vram_put
+;
+; vram_put(0x84);
+;
+	lda     #$84
+	jsr     _vram_put
+;
+; vram_put(0x85);
+;
+	lda     #$85
+	jsr     _vram_put
+;
+; vram_put(0x86);
+;
+	lda     #$86
+	jsr     _vram_put
+;
+; vram_put(0x87);
+;
+	lda     #$87
+	jsr     _vram_put
+;
+; vram_fill(0x00, 2);
+;
+	lda     #$00
+	jsr     pusha
+	ldx     #$00
+	lda     #$02
+	jsr     _vram_fill
+;
+; vram_put(0x8D);
+;
+	lda     #$8D
+	jsr     _vram_put
+;
+; vram_put(0x8E);
+;
+	lda     #$8E
+	jsr     _vram_put
+;
+; vram_put(0x8F);
+;
+	lda     #$8F
+	jsr     _vram_put
+;
+; vram_put(0x90);
+;
+	lda     #$90
+	jsr     _vram_put
+;
+; vram_put(0x91);
+;
+	lda     #$91
+	jsr     _vram_put
+;
+; vram_fill(0x00, 38);
+;
+	lda     #$00
+	jsr     pusha
+	ldx     #$00
+	lda     #$26
+	jsr     _vram_fill
+;
+; ppu_on_all();
+;
+	jsr     _ppu_on_all
+;
+; }
+;
+	rts
+
+.endproc
+
+; ---------------------------------------------------------------
+; void __near__ set_title (void)
+; ---------------------------------------------------------------
+
+.segment	"BANK1"
+
+.proc	_set_title: near
+
+.segment	"BANK1"
+
+;
+; ppu_off();
+;
+	jsr     _ppu_off
+;
+; vram_unrle(title);
+;
+	lda     #<(_title)
+	ldx     #>(_title)
+	jsr     _vram_unrle
+;
+; ppu_on_all();
+;
+	jsr     _ppu_on_all
+;
+; }
+;
+	rts
+
+.endproc
+
+; ---------------------------------------------------------------
+; void __near__ check_set_soul (void)
+; ---------------------------------------------------------------
+
+.segment	"BANK2"
+
+.proc	_check_set_soul: near
+
+.segment	"BANK2"
+
+;
+; sfx_play(11, 0);
+;
+	lda     #$0B
+	jsr     pusha
+	lda     #$00
+	jsr     _sfx_play
+;
+; if(battle_choosen==0){
+;
+	ldx     #$00
+	lda     _battle_choosen
+	cmp     #$00
+	jsr     booleq
+	jeq     L0002
+;
+; player_x=25;
+;
+	ldx     #$00
+	lda     #$19
+	sta     _player_x
+;
+; if(battle_choosen==1){
+;
+L0002:	ldx     #$00
+	lda     _battle_choosen
+	cmp     #$01
+	jsr     booleq
+	jeq     L0003
+;
+; player_x=81;
+;
+	ldx     #$00
+	lda     #$51
+	sta     _player_x
+;
+; if(battle_choosen==2){
+;
+L0003:	ldx     #$00
+	lda     _battle_choosen
+	cmp     #$02
+	jsr     booleq
+	jeq     L0004
+;
+; player_x=137;
+;
+	ldx     #$00
+	lda     #$89
+	sta     _player_x
+;
+; if(battle_choosen==3){
+;
+L0004:	ldx     #$00
+	lda     _battle_choosen
+	cmp     #$03
+	jsr     booleq
+	jeq     L0005
+;
+; player_x=193;
+;
+	ldx     #$00
+	lda     #$C1
+	sta     _player_x
+;
+; }
+;
+L0005:	rts
+
+.endproc
+
+; ---------------------------------------------------------------
+; void __near__ init_fight (void)
+; ---------------------------------------------------------------
+
+.segment	"BANK2"
+
+.proc	_init_fight: near
+
+.segment	"BANK2"
+
+;
+; state=2;
+;
+	ldx     #$00
+	lda     #$02
+	sta     _state
+;
+; player_y=220;
+;
+	ldx     #$00
+	lda     #$DC
+	sta     _player_y
+;
+; banked_call(2,check_set_soul);
+;
+	lda     #$02
+	jsr     pusha
+	lda     #<(_check_set_soul)
+	ldx     #>(_check_set_soul)
+	jsr     _banked_call
+;
+; music_stop();
+;
+	jsr     _music_stop
+;
+; music_play(4);
+;
+	lda     #$04
+	jsr     _music_play
+;
+; banked_call(1,clear_background);
+;
+	lda     #$01
+	jsr     pusha
+	lda     #<(_clear_background)
+	ldx     #>(_clear_background)
+	jsr     _banked_call
+;
+; oam_clear();
+;
+	jsr     _oam_clear
+;
+; banked_call(1,set_fight_bg);
+;
+	lda     #$01
+	jsr     pusha
+	lda     #<(_set_fight_bg)
+	ldx     #>(_set_fight_bg)
+	jsr     _banked_call
+;
+; }
+;
+	rts
+
+.endproc
+
+; ---------------------------------------------------------------
+; void __near__ frames_funcion (void)
+; ---------------------------------------------------------------
+
+.segment	"BANK2"
+
+.proc	_frames_funcion: near
+
+.segment	"BANK2"
+
+;
+; if(pad1 & PAD_LEFT){
+;
+	ldx     #$00
+	lda     _pad1
+	ldx     #$00
+	and     #$02
+	stx     tmp1
+	ora     tmp1
+	jeq     L0002
+;
+; if(!(keys_pressed & 1<<6)){
+;
+	ldx     #$00
+	lda     _keys_pressed
+	ldx     #$00
+	and     #$40
+	jsr     bnegax
+	jeq     L0003
+;
+; banked_call(2,check_set_soul);
+;
+	lda     #$02
+	jsr     pusha
+	lda     #<(_check_set_soul)
+	ldx     #>(_check_set_soul)
+	jsr     _banked_call
+;
+; if(battle_choosen==0)
+;
+	ldx     #$00
+	lda     _battle_choosen
+	cmp     #$00
+	jsr     booleq
+	jeq     L0004
+;
+; battle_choosen=4;
+;
+	ldx     #$00
+	lda     #$04
+	sta     _battle_choosen
+;
+; battle_choosen--;
+;
+L0004:	ldx     #$00
+	lda     _battle_choosen
+	dec     _battle_choosen
+;
+; keys_pressed|= (1 << 6);
+;
+L0003:	ldx     #$00
+	lda     _keys_pressed
+	ora     #$40
+	sta     _keys_pressed
+;
+; else
+;
+	jmp     L0005
+;
+; keys_pressed&= ~(1 << 6);
+;
+L0002:	ldx     #$00
+	lda     _keys_pressed
+	and     #$BF
+	sta     _keys_pressed
+;
+; if(pad1 & PAD_RIGHT){
+;
+L0005:	ldx     #$00
+	lda     _pad1
+	ldx     #$00
+	and     #$01
+	stx     tmp1
+	ora     tmp1
+	jeq     L0006
+;
+; if(!(keys_pressed & 1<<7)){
+;
+	ldx     #$00
+	lda     _keys_pressed
+	ldx     #$00
+	and     #$80
+	jsr     bnegax
+	jeq     L0008
+;
+; banked_call(2,check_set_soul);
+;
+	lda     #$02
+	jsr     pusha
+	lda     #<(_check_set_soul)
+	ldx     #>(_check_set_soul)
+	jsr     _banked_call
+;
+; battle_choosen++;
+;
+	ldx     #$00
+	lda     _battle_choosen
+	inc     _battle_choosen
+;
+; if(battle_choosen==4)
+;
+	ldx     #$00
+	lda     _battle_choosen
+	cmp     #$04
+	jsr     booleq
+	jeq     L0008
+;
+; battle_choosen=0;
+;
+	ldx     #$00
+	lda     #$00
+	sta     _battle_choosen
+;
+; keys_pressed|= (1 << 7);
+;
+L0008:	ldx     #$00
+	lda     _keys_pressed
+	ora     #$80
+	sta     _keys_pressed
+;
+; else
+;
+	jmp     L0009
+;
+; keys_pressed&= ~(1 << 7);
+;
+L0006:	ldx     #$00
+	lda     _keys_pressed
+	and     #$7F
+	sta     _keys_pressed
+;
+; oam_clear();
+;
+L0009:	jsr     _oam_clear
+;
+; banked_call(0,set_soul);
+;
+	lda     #$00
+	jsr     pusha
+	lda     #<(_set_soul)
+	ldx     #>(_set_soul)
+	jsr     _banked_call
+;
+; }
+;
+	rts
+
+.endproc
 
 ; ---------------------------------------------------------------
 ; void __near__ frisk_frame_change (void)
@@ -683,6 +2398,12 @@ _frisk_map_box:
 	cmp     #$0A
 	jsr     booleq
 	jeq     L0002
+;
+; steps++;
+;
+	ldx     #$00
+	lda     _steps
+	inc     _steps
 ;
 ; frisk_frame_wait=0;
 ;
@@ -745,14 +2466,37 @@ L0005:	rts
 .segment	"CODE"
 
 ;
-; music_play(0);
+; sfx_play(1, 0);
 ;
+	lda     #$01
+	jsr     pusha
 	lda     #$00
-	jsr     _music_play
+	jsr     _sfx_play
 ;
 ; ppu_off();
 ;
 	jsr     _ppu_off
+;
+; set_vram_buffer();
+;
+	jsr     _set_vram_buffer
+;
+; bank_bg(1);
+;
+	lda     #$01
+	jsr     _bank_bg
+;
+; banked_call(1, set_title);
+;
+	lda     #$01
+	jsr     pusha
+	lda     #<(_set_title)
+	ldx     #>(_set_title)
+	jsr     _banked_call
+;
+; disable_irq();
+;
+	jsr     _disable_irq
 ;
 ; pal_all(palette);
 ;
@@ -785,15 +2529,57 @@ L0005:	rts
 ;
 ; while(1){
 ;
-	jmp     L0007
+	jmp     L002A
 ;
 ; ppu_wait_nmi();
 ;
 L0002:	jsr     _ppu_wait_nmi
 ;
+; if(timer0>0){
+;
+	ldx     #$00
+	lda     _timer0
+	cmp     #$00
+	jsr     boolne
+	jeq     L0005
+;
+; timer0 -= 1;
+;
+	ldx     #$00
+	dec     _timer0
+	lda     _timer0
+;
+; if(timer1>0){
+;
+L0005:	ldx     #$00
+	lda     _timer1
+	cmp     #$00
+	jsr     boolne
+	jeq     L0006
+;
+; timer1 -= 1;
+;
+	ldx     #$00
+	dec     _timer1
+	lda     _timer1
+;
+; if(timer2>0){
+;
+L0006:	ldx     #$00
+	lda     _timer2
+	cmp     #$00
+	jsr     boolne
+	jeq     L0007
+;
+; timer2 -= 1;
+;
+	ldx     #$00
+	dec     _timer2
+	lda     _timer2
+;
 ; pad1 = pad_poll(0);
 ;
-	lda     #$00
+L0007:	lda     #$00
 	jsr     _pad_poll
 	sta     _pad1
 ;
@@ -803,7 +2589,7 @@ L0002:	jsr     _ppu_wait_nmi
 	lda     _state
 	cmp     #$00
 	jsr     booleq
-	jeq     L0006
+	jeq     L0009
 ;
 ; if(pad1 & PAD_START){
 ;
@@ -813,22 +2599,18 @@ L0002:	jsr     _ppu_wait_nmi
 	and     #$10
 	stx     tmp1
 	ora     tmp1
-	jeq     L0006
-;
-; music_stop();
-;
-	jsr     _music_stop
+	jeq     L0009
 ;
 ; music_play(1);
 ;
 	lda     #$01
 	jsr     _music_play
 ;
-; pal_fade_to(4,0);
+; pal_fade_to(4,8);
 ;
 	lda     #$04
 	jsr     pusha
-	lda     #$00
+	lda     #$08
 	jsr     _pal_fade_to
 ;
 ; state = 1;
@@ -837,237 +2619,39 @@ L0002:	jsr     _ppu_wait_nmi
 	lda     #$01
 	sta     _state
 ;
+; ppu_off();
+;
+	jsr     _ppu_off
+;
+; vram_adr(NAMETABLE_A);
+;
+	ldx     #$20
+	lda     #$00
+	jsr     _vram_adr
+;
+; vram_fill(0x01,960);
+;
+	lda     #$01
+	jsr     pusha
+	ldx     #$03
+	lda     #$C0
+	jsr     _vram_fill
+;
+; ppu_on_all();
+;
+	jsr     _ppu_on_all
+;
 ; if(state == 1){
 ;
-L0006:	ldx     #$00
+L0009:	ldx     #$00
 	lda     _state
 	cmp     #$01
 	jsr     booleq
-	jeq     L0007
-;
-; if(pal_had_fade_not == 0){
-;
-	ldx     #$00
-	lda     _pal_had_fade_not
-	cmp     #$00
-	jsr     booleq
-	jeq     L0008
-;
-; pal_fade_to(0,4);
-;
-	lda     #$00
-	jsr     pusha
-	lda     #$04
-	jsr     _pal_fade_to
-;
-; pal_had_fade_not = 1;
-;
-	ldx     #$00
-	lda     #$01
-	sta     _pal_had_fade_not
-;
-; if((pad1 & PAD_LEFT)&&(player_x>=0x02)){
-;
-L0008:	ldx     #$00
-	lda     _pad1
-	ldx     #$00
-	and     #$02
-	stx     tmp1
-	ora     tmp1
-	jeq     L000A
-	ldx     #$00
-	lda     _player_x
-	cmp     #$02
-	lda     #$00
-	ldx     #$00
-	rol     a
-	jne     L000B
-L000A:	ldx     #$00
-	lda     #$00
-	jeq     L000C
-L000B:	ldx     #$00
-	lda     #$01
-L000C:	jeq     L0009
-;
-; frisk_face = 2;
-;
-	ldx     #$00
-	lda     #$02
-	sta     _frisk_face
-;
-; player_x=player_x-1;
-;
-	ldx     #$00
-	lda     _player_x
-	jsr     decax1
-	ldx     #$00
-	sta     _player_x
-;
-; else if((pad1 & PAD_RIGHT)&&(player_x<=0xF0)){
-;
-	jmp     L000E
-L0009:	ldx     #$00
-	lda     _pad1
-	ldx     #$00
-	and     #$01
-	stx     tmp1
-	ora     tmp1
-	jeq     L000F
-	ldx     #$00
-	lda     _player_x
-	cmp     #$F1
-	jsr     boolult
-	jne     L0010
-L000F:	ldx     #$00
-	lda     #$00
-	jeq     L0011
-L0010:	ldx     #$00
-	lda     #$01
-L0011:	jeq     L000E
-;
-; frisk_face = 3;
-;
-	ldx     #$00
-	lda     #$03
-	sta     _frisk_face
-;
-; player_x=player_x+1;
-;
-	ldx     #$00
-	lda     _player_x
-	jsr     incax1
-	ldx     #$00
-	sta     _player_x
-;
-; if((pad1 & PAD_UP)&&(player_y>=0x02)){
-;
-L000E:	ldx     #$00
-	lda     _pad1
-	ldx     #$00
-	and     #$08
-	stx     tmp1
-	ora     tmp1
-	jeq     L0013
-	ldx     #$00
-	lda     _player_y
-	cmp     #$02
-	lda     #$00
-	ldx     #$00
-	rol     a
-	jne     L0014
-L0013:	ldx     #$00
-	lda     #$00
-	jeq     L0015
-L0014:	ldx     #$00
-	lda     #$01
-L0015:	jeq     L0012
-;
-; frisk_face = 1;
-;
-	ldx     #$00
-	lda     #$01
-	sta     _frisk_face
-;
-; player_y=player_y-1;
-;
-	ldx     #$00
-	lda     _player_y
-	jsr     decax1
-	ldx     #$00
-	sta     _player_y
-;
-; else if((pad1 & PAD_DOWN)&&(player_y<=0xC5)){
-;
-	jmp     L0017
-L0012:	ldx     #$00
-	lda     _pad1
-	ldx     #$00
-	and     #$04
-	stx     tmp1
-	ora     tmp1
-	jeq     L0018
-	ldx     #$00
-	lda     _player_y
-	cmp     #$C6
-	jsr     boolult
-	jne     L0019
-L0018:	ldx     #$00
-	lda     #$00
-	jeq     L001A
-L0019:	ldx     #$00
-	lda     #$01
-L001A:	jeq     L0017
-;
-; frisk_face = 0;
-;
-	ldx     #$00
-	lda     #$00
-	sta     _frisk_face
-;
-; player_y=player_y+1;
-;
-	ldx     #$00
-	lda     _player_y
-	jsr     incax1
-	ldx     #$00
-	sta     _player_y
-;
-; if(!(pad1 & PAD_LEFT)&&!(pad1 & PAD_RIGHT)&&!(pad1 & PAD_UP)&&!(pad1 & PAD_DOWN)){
-;
-L0017:	ldx     #$00
-	lda     _pad1
-	ldx     #$00
-	and     #$02
-	jsr     bnegax
-	jeq     L001C
-	ldx     #$00
-	lda     _pad1
-	ldx     #$00
-	and     #$01
-	jsr     bnegax
-	jeq     L001C
-	ldx     #$00
-	lda     _pad1
-	ldx     #$00
-	and     #$08
-	jsr     bnegax
-	jeq     L001C
-	ldx     #$00
-	lda     _pad1
-	ldx     #$00
-	and     #$04
-	jsr     bnegax
-	jne     L001D
-L001C:	ldx     #$00
-	lda     #$00
-	jeq     L001E
-L001D:	ldx     #$00
-	lda     #$01
-L001E:	jeq     L001B
-;
-; frisk_frame = 0;
-;
-	ldx     #$00
-	lda     #$00
-	sta     _frisk_frame
-;
-; frisk_frame_wait = 0;
-;
-	ldx     #$00
-	lda     #$00
-	sta     _frisk_frame_wait
-;
-; else
-;
-	jmp     L001F
-;
-; frisk_frame_change();
-;
-L001B:	jsr     _frisk_frame_change
+	jeq     L0024
 ;
 ; map_frisk_collison=0;
 ;
-L001F:	ldx     #$00
+	ldx     #$00
 	lda     #$00
 	sta     _map_frisk_collison
 ;
@@ -1086,48 +2670,413 @@ L001F:	ldx     #$00
 	ldx     #$00
 	sta     _frisk_map_box+1
 ;
+; set_scroll_x(scroll_x);
+;
+	ldx     #$00
+	lda     _scroll_x
+	jsr     _set_scroll_x
+;
+; set_scroll_y(scroll_y);
+;
+	ldx     #$00
+	lda     _scroll_y
+	jsr     _set_scroll_y
+;
 ; oam_clear();
 ;
 	jsr     _oam_clear
 ;
-; oam_meta_spr(player_x, player_y , frisk[frisk_face][frisk_frame]);
+; banked_call(0, set_frisk);
 ;
+	lda     #$00
+	jsr     pusha
+	lda     #<(_set_frisk)
+	ldx     #>(_set_frisk)
+	jsr     _banked_call
+;
+; if(pal_had_fade_not == 0){
+;
+	ldx     #$00
+	lda     _pal_had_fade_not
+	cmp     #$00
+	jsr     booleq
+	jeq     L000B
+;
+; pal_fade_to(8,4);
+;
+	lda     #$08
+	jsr     pusha
+	lda     #$04
+	jsr     _pal_fade_to
+;
+; pal_had_fade_not = 1;
+;
+	ldx     #$00
+	lda     #$01
+	sta     _pal_had_fade_not
+;
+; if((pad1 & PAD_LEFT)&&(player_x>=0x02)){
+;
+L000B:	ldx     #$00
+	lda     _pad1
+	ldx     #$00
+	and     #$02
+	stx     tmp1
+	ora     tmp1
+	jeq     L000D
+	ldx     #$00
 	lda     _player_x
-	jsr     pusha
+	cmp     #$02
+	lda     #$00
+	ldx     #$00
+	rol     a
+	jne     L000E
+L000D:	ldx     #$00
+	lda     #$00
+	jeq     L000F
+L000E:	ldx     #$00
+	lda     #$01
+L000F:	jeq     L000C
+;
+; frisk_face = 2;
+;
+	ldx     #$00
+	lda     #$02
+	sta     _frisk_face
+;
+; player_x=player_x-1;
+;
+	ldx     #$00
+	lda     _player_x
+	jsr     decax1
+	ldx     #$00
+	sta     _player_x
+;
+; else if((pad1 & PAD_RIGHT)&&(player_x<=0xF0)){
+;
+	jmp     L0011
+L000C:	ldx     #$00
+	lda     _pad1
+	ldx     #$00
+	and     #$01
+	stx     tmp1
+	ora     tmp1
+	jeq     L0012
+	ldx     #$00
+	lda     _player_x
+	cmp     #$F1
+	jsr     boolult
+	jne     L0013
+L0012:	ldx     #$00
+	lda     #$00
+	jeq     L0014
+L0013:	ldx     #$00
+	lda     #$01
+L0014:	jeq     L0011
+;
+; frisk_face = 3;
+;
+	ldx     #$00
+	lda     #$03
+	sta     _frisk_face
+;
+; player_x=player_x+1;
+;
+	ldx     #$00
+	lda     _player_x
+	jsr     incax1
+	ldx     #$00
+	sta     _player_x
+;
+; if((pad1 & PAD_UP)&&(player_y>=0x02)){
+;
+L0011:	ldx     #$00
+	lda     _pad1
+	ldx     #$00
+	and     #$08
+	stx     tmp1
+	ora     tmp1
+	jeq     L0016
+	ldx     #$00
 	lda     _player_y
-	jsr     pusha
+	cmp     #$02
+	lda     #$00
 	ldx     #$00
-	lda     _frisk_face
-	jsr     aslax3
-	clc
-	adc     #<(_frisk)
-	tay
-	txa
-	adc     #>(_frisk)
-	tax
-	tya
-	jsr     pushax
+	rol     a
+	jne     L0017
+L0016:	ldx     #$00
+	lda     #$00
+	jeq     L0018
+L0017:	ldx     #$00
+	lda     #$01
+L0018:	jeq     L0015
+;
+; frisk_face = 1;
+;
 	ldx     #$00
-	lda     _frisk_frame
-	jsr     aslax1
-	jsr     tosaddax
-	ldy     #$01
-	jsr     ldaxidx
-	jsr     _oam_meta_spr
+	lda     #$01
+	sta     _frisk_face
 ;
-; oam_meta_spr(120, 100 , flowey_talk[0]);
+; player_y=player_y-1;
 ;
-	lda     #$78
+	ldx     #$00
+	lda     _player_y
+	jsr     decax1
+	ldx     #$00
+	sta     _player_y
+;
+; else if((pad1 & PAD_DOWN)&&(player_y<=0xC5)){
+;
+	jmp     L001A
+L0015:	ldx     #$00
+	lda     _pad1
+	ldx     #$00
+	and     #$04
+	stx     tmp1
+	ora     tmp1
+	jeq     L001B
+	ldx     #$00
+	lda     _player_y
+	cmp     #$C6
+	jsr     boolult
+	jne     L001C
+L001B:	ldx     #$00
+	lda     #$00
+	jeq     L001D
+L001C:	ldx     #$00
+	lda     #$01
+L001D:	jeq     L001A
+;
+; frisk_face = 0;
+;
+	ldx     #$00
+	lda     #$00
+	sta     _frisk_face
+;
+; player_y=player_y+1;
+;
+	ldx     #$00
+	lda     _player_y
+	jsr     incax1
+	ldx     #$00
+	sta     _player_y
+;
+; if(pad1 & PAD_SELECT){
+;
+L001A:	ldx     #$00
+	lda     _pad1
+	ldx     #$00
+	and     #$20
+	stx     tmp1
+	ora     tmp1
+	jeq     L001E
+;
+; state = 3;
+;
+	ldx     #$00
+	lda     #$03
+	sta     _state
+;
+; timer0 = 60;
+;
+	ldx     #$00
+	lda     #$3C
+	sta     _timer0
+;
+; oam_clear();
+;
+	jsr     _oam_clear
+;
+; music_stop();
+;
+	jsr     _music_stop
+;
+; if(pad1 & PAD_START){
+;
+L001E:	ldx     #$00
+	lda     _pad1
+	ldx     #$00
+	and     #$10
+	stx     tmp1
+	ora     tmp1
+	jeq     L001F
+;
+; if(!(pad1 & PAD_LEFT)&&!(pad1 & PAD_RIGHT)&&!(pad1 & PAD_UP)&&!(pad1 & PAD_DOWN)){
+;
+L001F:	ldx     #$00
+	lda     _pad1
+	ldx     #$00
+	and     #$02
+	jsr     bnegax
+	jeq     L0021
+	ldx     #$00
+	lda     _pad1
+	ldx     #$00
+	and     #$01
+	jsr     bnegax
+	jeq     L0021
+	ldx     #$00
+	lda     _pad1
+	ldx     #$00
+	and     #$08
+	jsr     bnegax
+	jeq     L0021
+	ldx     #$00
+	lda     _pad1
+	ldx     #$00
+	and     #$04
+	jsr     bnegax
+	jne     L0022
+L0021:	ldx     #$00
+	lda     #$00
+	jeq     L0023
+L0022:	ldx     #$00
+	lda     #$01
+L0023:	jeq     L0020
+;
+; frisk_frame = 0;
+;
+	ldx     #$00
+	lda     #$00
+	sta     _frisk_frame
+;
+; frisk_frame_wait = 0;
+;
+	ldx     #$00
+	lda     #$00
+	sta     _frisk_frame_wait
+;
+; else
+;
+	jmp     L0024
+;
+; frisk_frame_change();
+;
+L0020:	jsr     _frisk_frame_change
+;
+; if(state == 2){
+;
+L0024:	ldx     #$00
+	lda     _state
+	cmp     #$02
+	jsr     booleq
+	jeq     L0025
+;
+; banked_call(2,frames_funcion);
+;
+	lda     #$02
 	jsr     pusha
-	lda     #$64
+	lda     #<(_frames_funcion)
+	ldx     #>(_frames_funcion)
+	jsr     _banked_call
+;
+; if(state == 3){
+;
+L0025:	ldx     #$00
+	lda     _state
+	cmp     #$03
+	jsr     booleq
+	jeq     L002A
+;
+; if(timer0==60){
+;
+	ldx     #$00
+	lda     _timer0
+	cmp     #$3C
+	jsr     booleq
+	jeq     L0027
+;
+; banked_call(1, clear_background);
+;
+	lda     #$01
 	jsr     pusha
-	lda     _flowey_talk
-	ldx     _flowey_talk+1
-	jsr     _oam_meta_spr
+	lda     #<(_clear_background)
+	ldx     #>(_clear_background)
+	jsr     _banked_call
+;
+; banked_call(0,set_die_soul);
+;
+	lda     #$00
+	jsr     pusha
+	lda     #<(_set_die_soul)
+	ldx     #>(_set_die_soul)
+	jsr     _banked_call
+;
+; sfx_play(2, 0);
+;
+	lda     #$02
+	jsr     pusha
+	lda     #$00
+	jsr     _sfx_play
+;
+; if(timer0==1){
+;
+L0027:	ldx     #$00
+	lda     _timer0
+	cmp     #$01
+	jsr     booleq
+	jeq     L0028
+;
+; oam_clear();
+;
+	jsr     _oam_clear
+;
+; sfx_play(3, 0);
+;
+	lda     #$03
+	jsr     pusha
+	lda     #$00
+	jsr     _sfx_play
+;
+; if(timer0==0){
+;
+L0028:	ldx     #$00
+	lda     _timer0
+	cmp     #$00
+	jsr     booleq
+	jeq     L002A
+;
+; if(pad1 & PAD_START){
+;
+	ldx     #$00
+	lda     _pad1
+	ldx     #$00
+	and     #$10
+	stx     tmp1
+	ora     tmp1
+	jeq     L002A
+;
+; state=1;
+;
+	ldx     #$00
+	lda     #$01
+	sta     _state
+;
+; ppu_off();
+;
+	jsr     _ppu_off
+;
+; vram_adr(NAMETABLE_A);
+;
+	ldx     #$20
+	lda     #$00
+	jsr     _vram_adr
+;
+; vram_fill(0x01,960);
+;
+	lda     #$01
+	jsr     pusha
+	ldx     #$03
+	lda     #$C0
+	jsr     _vram_fill
+;
+; ppu_on_all();
+;
+	jsr     _ppu_on_all
 ;
 ; while(1){
 ;
-L0007:	jmp     L0002
+L002A:	jmp     L0002
 ;
 ; }
 ;
